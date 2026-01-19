@@ -70,7 +70,7 @@ jobs:
       - name: publish
         shell: bash
         run: |
-          ./gradlew publishAllPublicationsToLocalRepository --no-configuration-cache
+          ./gradlew publishAllPublicationsToLocalRepository
 
   test:
     runs-on: ubuntu-latest
