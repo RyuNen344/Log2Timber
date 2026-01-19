@@ -19,6 +19,7 @@
 
 package io.github.ryunen344.log2timber
 
+import com.android.build.api.instrumentation.FramesComputationMode
 import com.android.build.api.instrumentation.InstrumentationScope
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import com.android.build.gradle.AppPlugin
@@ -31,10 +32,11 @@ public class Log2TimberPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         val plugin = target.plugins.findPlugin(AppPlugin::class)
         if (plugin == null) {
-            target.logger.lifecycle("Cat2TimberPlugin: Android Application Plugin not found. Skipping plugin application.")
+            target.logger.warn("Log2Timber: Android Application Plugin not found. Skipping plugin application.")
         } else {
-            target.logger.lifecycle("Cat2TimberPlugin: Android Application Plugin found. Applying Cat2TimberPlugin.")
+            target.logger.lifecycle("Log2Timber: Android Application Plugin found. Applying Log2TimberPlugin.")
             target.extensions.getByType(ApplicationAndroidComponentsExtension::class).onVariants { variant ->
+                target.logger.lifecycle("Log2Timber: Setting up Log2Timber instrumentation for variant: ${variant.name}")
                 variant.instrumentation.transformClassesWith(
                     Log2TimberVisitorFactory::class.java,
                     InstrumentationScope.ALL,
