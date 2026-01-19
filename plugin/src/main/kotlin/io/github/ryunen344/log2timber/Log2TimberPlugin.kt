@@ -43,10 +43,12 @@ public class Log2TimberPlugin : Plugin<Project> {
                 ) {
                     // No parameters to set
                 }
-            }
 
-            target.configurations.forEach {
-                target.logger.lifecycle("Configuration: ${it.name}")
+                // Log to Timber transformation may change the stack map frames.
+                // Therefore, we need to recompute the frames for the instrumented methods.
+                variant.instrumentation.setAsmFramesComputationMode(
+                    FramesComputationMode.COMPUTE_FRAMES_FOR_INSTRUMENTED_METHODS,
+                )
             }
         }
     }
