@@ -34,4 +34,4 @@ jobs:
           SIGNING_ENABLED: true
         shell: bash
         run: |
-          ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
+          ./gradlew publishAndReleaseToMavenCentral

@@ -56,7 +56,7 @@ afterEvaluate {
         repositories {
             maven {
                 name = "Local"
-                setUrl(layout.settingsDirectory.dir("releases/maven"))
+                setUrl(layout.settingsDirectory.dir("releases").dir("maven"))
             }
         }
     }

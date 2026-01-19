@@ -1,0 +1,21 @@
+pluginManagement {
+    includeBuild("..")
+    repositories {
+        // maven { url layout.settingsDirectory.dir("..").dir("releases").dir("maven") }
+        mavenCentral()
+        google()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    versionCatalogs {
+        libs {
+            from(files("../gradle/libs.versions.toml"))
+        }
+    }
+    repositories {
+        mavenCentral()
+        google()
+    }
+}

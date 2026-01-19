@@ -21,11 +21,16 @@ package io.github.ryunen344.log2timber
 
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 public class Log2TimberMethodVisitor(
     api: Int,
     methodVisitor: MethodVisitor,
 ) : MethodVisitor(api, methodVisitor) {
+
+    private val logger: Logger by lazy { LoggerFactory.getLogger(javaClass) }
+
     override fun visitMethodInsn(
         opcode: Int,
         owner: String?,
@@ -142,7 +147,7 @@ public class Log2TimberMethodVisitor(
                         }
 
                         else -> {
-                            println("[Cat2Timber] Unsupported Log method: $name$descriptor")
+                            logger.warn("Log2Timber: Unsupported descriptor: {}{}", name, descriptor)
                             super.visitMethodInsn(opcode, owner, name, descriptor, isInterface)
                         }
                     }
@@ -169,7 +174,7 @@ public class Log2TimberMethodVisitor(
                 }
 
                 else -> {
-                    println("[Cat2Timber] Unsupported Log method: $name$descriptor")
+                    logger.warn("Log2Timber Unsupported name: {}{}", name, descriptor)
                     super.visitMethodInsn(opcode, owner, name, descriptor, isInterface)
                 }
             }

@@ -32,5 +32,5 @@ develocity {
 }
 
 rootProject.name = "Log2Timber"
-include ':app'
 include ':plugin'
+includeBuild 'app'
