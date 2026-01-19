@@ -12,7 +12,7 @@ jdk = "17"
 junit = "6.0.2"
 kotlin = "2.2.0"
 kover = "0.9.4"
-maven-publish = "0.34.0"
+maven-publish = "0.36.0"
 serialization = "1.9.0"
 version-catalog-update = "1.0.1"
 
