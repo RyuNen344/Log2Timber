@@ -1,0 +1,74 @@
+pluginManager.apply("com.vanniktech.maven.publish")
+pluginManager.apply("signing")
+
+abstract class LocalDotPropertiesValueSource implements ValueSource<Properties, Parameters> {
+    interface Parameters extends ValueSourceParameters {
+        @InputFiles
+        RegularFileProperty getFile()
+    }
+
+    Properties obtain() {
+        def prop = new Properties()
+        def file = parameters.file.get().asFile
+        if (file.exists()) {
+            prop.load(file.newReader())
+        }
+        return prop
+    }
+}
+
+def propertiesProvider = providers.of(LocalDotPropertiesValueSource.class) {
+    parameters {
+        file = project.layout.settingsDirectory.file(".local.properties")
+    }
+}
+
+afterEvaluate {
+    mavenPublishing {
+        pom {
+            inceptionYear = "2026"
+            url = "https://github.com/RyuNen344/Log2Timber"
+            licenses {
+                license {
+                    name = "Apache-2.0"
+                    url = "https://github.com/RyuNen344/Log2Timber/blob/main/LICENSE"
+                    distribution = "repo"
+                }
+            }
+            developers {
+                developer {
+                    id = "RyuNen344"
+                    name = "RyuNen344"
+                    email = "s1100633@outlook.com"
+                }
+            }
+            scm {
+                url = "https://github.com/RyuNen344/Log2Timber"
+                connection = "scm:git://github.com/RyuNen344/Log2Timber.git"
+                developerConnection = "scm:git:ssh://github.com/RyuNen344/Log2Timber.git"
+            }
+        }
+
+        publishToMavenCentral()
+    }
+
+    publishing {
+        repositories {
+            maven {
+                name = "Local"
+                setUrl(layout.settingsDirectory.dir("releases/maven"))
+            }
+        }
+    }
+}
+
+signing {
+    def enabled = propertiesProvider.get().getProperty("signing.enabled")?.toBoolean() ?: providers.environmentVariable("SIGNING_ENABLED").map { it == "true" }.getOrElse(false)
+    if (enabled) {
+        def keyId = propertiesProvider.get().getProperty("pgp.key_id") ?: providers.environmentVariable("PGP_KEY_ID").getOrNull()
+        def secretKey = propertiesProvider.get().getProperty("pgp.signing_key") ?: providers.environmentVariable("PGP_SIGNING_KEY").getOrNull()
+        def password = propertiesProvider.get().getProperty("pgp.signing_password") ?: providers.environmentVariable("PGP_SIGNING_PASSWORD").getOrNull()
+        useInMemoryPgpKeys(keyId, secretKey, password)
+        sign(publishing.publications)
+    }
+}

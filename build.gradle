@@ -1,0 +1,49 @@
+import io.gitlab.arturbosch.detekt.Detekt
+
+plugins {
+    alias libs.plugins.com.android.library apply false
+    alias libs.plugins.org.jetbrains.kotlin.android apply false
+    alias libs.plugins.org.jetbrains.kotlin.jvm apply false
+    alias libs.plugins.org.jetbrains.kotlin.plugin.compose apply false
+    alias libs.plugins.com.vanniktech.maven.publish apply false
+    alias libs.plugins.io.gitlab.arturbosch.detekt
+    alias libs.plugins.nl.littlerobots.version.catalog.update
+}
+
+apply from: layout.settingsDirectory.dir("gradle").file("resolve-all-dependencies.gradle")
+
+tasks.register('cleanLocalMaven', Delete) {
+    group = LifecycleBasePlugin.BUILD_GROUP
+    delete(layout.settingsDirectory.dir("releases"))
+}
+
+detekt {
+    parallel = true
+    autoCorrect = project.providers.gradleProperty("autoCorrect").present
+    config.from = layout.settingsDirectory.file(".lint/detekt.yml")
+    source.from = layout.settingsDirectory.asFileTree.matching {
+        include("**/*.kt", "**/*.kts")
+        exclude("**/build/")
+    }
+    baseline = layout.settingsDirectory.file(".lint/baseline.xml").asFile
+}
+
+tasks.withType(Detekt).configureEach {
+    jvmTarget = libs.versions.jdk.get()
+}
+
+dependencies {
+    detektPlugins(libs.io.gitlab.arturbosch.detekt.formatting)
+}
+
+allprojects {
+    group = "io.github.ryunen344.log2timber"
+    version = providers.fileContents(layout.settingsDirectory.file("version.txt")).asText.getOrElse("snapshot").trim()
+}
+
+versionCatalogUpdate {
+    sortByKey = true
+    keep {
+        keepUnusedVersions = true
+    }
+}
