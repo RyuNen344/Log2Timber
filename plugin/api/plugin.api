@@ -1,0 +1,25 @@
+public final class io/github/ryunen344/log2timber/Log2TimberClassVisitor : org/objectweb/asm/ClassVisitor {
+	public fun <init> (ILorg/objectweb/asm/ClassVisitor;)V
+	public fun visitMethod (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Lorg/objectweb/asm/MethodVisitor;
+}
+
+public final class io/github/ryunen344/log2timber/Log2TimberMethodVisitor : org/objectweb/asm/MethodVisitor {
+	public fun <init> (ILorg/objectweb/asm/MethodVisitor;)V
+	public fun visitMethodInsn (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V
+}
+
+public final class io/github/ryunen344/log2timber/Log2TimberPlugin : org/gradle/api/Plugin {
+	public fun <init> ()V
+	public synthetic fun apply (Ljava/lang/Object;)V
+	public fun apply (Lorg/gradle/api/Project;)V
+}
+
+public abstract class io/github/ryunen344/log2timber/Log2TimberVisitorFactory : com/android/build/api/instrumentation/AsmClassVisitorFactory {
+	public fun <init> ()V
+	public fun createClassVisitor (Lcom/android/build/api/instrumentation/ClassContext;Lorg/objectweb/asm/ClassVisitor;)Lorg/objectweb/asm/ClassVisitor;
+	public fun isInstrumentable (Lcom/android/build/api/instrumentation/ClassData;)Z
+}
+
+public abstract interface class io/github/ryunen344/log2timber/Log2TimberVisitorFactory$Parameter : com/android/build/api/instrumentation/InstrumentationParameters {
+}
+

@@ -1,0 +1,45 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+plugins {
+    alias libs.plugins.java.gradle.plugin
+    alias libs.plugins.org.jetbrains.kotlin.jvm
+    alias libs.plugins.org.jetbrains.kotlinx.binary.compatibility.validator
+    alias libs.plugins.org.jetbrains.kotlinx.kover
+}
+
+apply from: layout.settingsDirectory.dir("gradle").file("publish.gradle")
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.jdk.get()))
+    }
+}
+
+kotlin {
+    explicitApi()
+    compilerOptions.jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
+}
+
+test {
+    useJUnitPlatform()
+}
+
+gradlePlugin {
+    plugins {
+        register("log2timber") {
+            id = "log2timber"
+            implementationClass = "io.github.ryunen344.log2timber.Log2TimberPlugin"
+        }
+    }
+}
+
+dependencies {
+    compileOnly libs.com.android.tools.build.gradle.api
+    compileOnly gradleApi()
+    compileOnly fileTree(dir: "${gradle.gradleHomeDir}/lib", include: "gradle-kotlin-dsl-*.jar")
+    implementation libs.org.ow2.asm.util
+    testImplementation libs.com.willowtreeapps.assertk
+    testImplementation gradleTestKit()
+    testImplementation libs.org.junit.jupiter.jupiter
+    testRuntimeOnly libs.org.junit.platform.launcher
+}
