@@ -78,10 +78,10 @@ jobs:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/java
       - uses: ./.github/actions/gradle
-      - name: publish
+      - name: test
         shell: bash
         run: |
-          ./gradlew publishAllPublicationsToLocalRepository --no-configuration-cache
+          ./gradlew koverXmlReport
       - uses: dorny/test-reporter@v2
         if: ${{ !cancelled() }}
         with:
@@ -89,11 +89,6 @@ jobs:
           path: '**/test-results/**/*.xml'
           reporter: java-junit
           fail-on-error: false
-      - name: run jacoco
-        if: ${{ !cancelled() }}
-        shell: bash
-        run: |
-          ./gradlew jacocoReport
       - uses: madrapps/jacoco-report@v1.7.2
         if: ${{ !cancelled() }}
         with:
