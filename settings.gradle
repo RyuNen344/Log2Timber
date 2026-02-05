@@ -33,4 +33,5 @@ develocity {
 
 rootProject.name = "Log2Timber"
 include ':plugin'
-includeBuild 'app'
+includeBuild 'app-groovy'
+includeBuild 'app-kts'
