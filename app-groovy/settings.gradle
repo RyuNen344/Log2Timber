@@ -19,3 +19,5 @@ dependencyResolutionManagement {
         google()
     }
 }
+
+rootProject.name = "groovy-sample"

@@ -7,14 +7,20 @@ plugins {
 }
 
 android {
-    namespace = 'io.github.ryunen344.log2timber.app'
-    compileSdk = 36
-    buildToolsVersion = '36.0.0'
+    namespace = 'io.github.ryunen344.log2timber.app.groovy'
+    compileSdk {
+        version = release(36)
+    }
+    buildToolsVersion = '36.1.0'
 
     defaultConfig {
-        applicationId "io.github.ryunen344.log2timber.app"
-        minSdk 31
-        targetSdk 36
+        applicationId "io.github.ryunen344.log2timber.app.groovy"
+        minSdk {
+            version = release(31)
+        }
+        targetSdk {
+            version = release(36)
+        }
         versionCode 1
         versionName "1.0.0"
     }
@@ -46,7 +52,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    lintOptions {
+    lint {
         checkReleaseBuilds = false
     }
     testOptions {
