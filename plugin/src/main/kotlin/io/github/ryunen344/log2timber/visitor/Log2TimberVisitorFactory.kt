@@ -17,12 +17,18 @@
  * License-Filename: LICENSE
  */
 
-package io.github.ryunen344.log2timber
+package io.github.ryunen344.log2timber.visitor
 
 import com.android.build.api.instrumentation.AsmClassVisitorFactory
 import com.android.build.api.instrumentation.ClassContext
 import com.android.build.api.instrumentation.ClassData
 import com.android.build.api.instrumentation.InstrumentationParameters
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
 import org.objectweb.asm.ClassVisitor
 
 public abstract class Log2TimberVisitorFactory : AsmClassVisitorFactory<Log2TimberVisitorFactory.Parameter> {
@@ -31,9 +37,17 @@ public abstract class Log2TimberVisitorFactory : AsmClassVisitorFactory<Log2Timb
         classContext: ClassContext,
         nextClassVisitor: ClassVisitor,
     ): ClassVisitor {
+        val fileProperty = parameters.get().dump
+        if (fileProperty.isPresent) {
+            val file = fileProperty.asFile.get()
+            file.parentFile.mkdirs()
+            file.createNewFile()
+        }
         return Log2TimberClassVisitor(
             instrumentationContext.apiVersion.get(),
             nextClassVisitor,
+            parameters.get().forcePlant.get(),
+            fileProperty.takeIf(RegularFileProperty::isPresent)?.get(),
         )
     }
 
@@ -41,7 +55,14 @@ public abstract class Log2TimberVisitorFactory : AsmClassVisitorFactory<Log2Timb
         return !(TIMBER_CLASS.contains(classData.className) || classData.superClasses.any { TIMBER_CLASS.contains(it) })
     }
 
-    public interface Parameter : InstrumentationParameters
+    public interface Parameter : InstrumentationParameters {
+        @get:Input
+        public val forcePlant: Property<Boolean>
+
+        @get:InputFiles
+        @get:PathSensitive(PathSensitivity.RELATIVE)
+        public val dump: RegularFileProperty
+    }
 
     private companion object {
         val TIMBER_CLASS: List<String> = listOf(

@@ -1,25 +1,67 @@
-public final class io/github/ryunen344/log2timber/Log2TimberClassVisitor : org/objectweb/asm/ClassVisitor {
-	public fun <init> (ILorg/objectweb/asm/ClassVisitor;)V
-	public fun visitMethod (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Lorg/objectweb/asm/MethodVisitor;
+public abstract class io/github/ryunen344/log2timber/DumpLog2TimberTask : org/gradle/api/DefaultTask {
+	public fun <init> ()V
+	public final fun action ()V
+	public abstract fun getInput ()Lorg/gradle/api/file/RegularFileProperty;
+	public abstract fun getInputDirectories ()Lorg/gradle/api/provider/ListProperty;
+	public abstract fun getInputJars ()Lorg/gradle/api/provider/ListProperty;
+	public abstract fun getInto ()Lorg/gradle/api/file/RegularFileProperty;
+	public abstract fun getOutput ()Lorg/gradle/api/file/RegularFileProperty;
 }
 
-public final class io/github/ryunen344/log2timber/Log2TimberMethodVisitor : org/objectweb/asm/MethodVisitor {
-	public fun <init> (ILorg/objectweb/asm/MethodVisitor;)V
-	public fun visitMethodInsn (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V
+public abstract class io/github/ryunen344/log2timber/Log2TimberDslExtension {
+	public fun <init> (Lorg/gradle/api/model/ObjectFactory;)V
+	public final fun getDump ()Lorg/gradle/api/file/RegularFileProperty;
+	public final fun getEnabled ()Lorg/gradle/api/provider/Property;
+	public final fun getForcePlant ()Lorg/gradle/api/provider/Property;
 }
 
 public final class io/github/ryunen344/log2timber/Log2TimberPlugin : org/gradle/api/Plugin {
+	public static final field Companion Lio/github/ryunen344/log2timber/Log2TimberPlugin$Companion;
+	public static final field EXTENSION_NAME Ljava/lang/String;
+	public static final field MINIMUM_SUPPORTED_AGP_VERSION Ljava/lang/String;
+	public static final field TIMBER_GROUP Ljava/lang/String;
+	public static final field TIMBER_MODULE Ljava/lang/String;
 	public fun <init> ()V
 	public synthetic fun apply (Ljava/lang/Object;)V
 	public fun apply (Lorg/gradle/api/Project;)V
 }
 
-public abstract class io/github/ryunen344/log2timber/Log2TimberVisitorFactory : com/android/build/api/instrumentation/AsmClassVisitorFactory {
+public final class io/github/ryunen344/log2timber/Log2TimberPlugin$Companion {
+}
+
+public abstract class io/github/ryunen344/log2timber/Log2TimberVariantDslExtension : com/android/build/api/variant/VariantExtension, java/io/Serializable {
+	public fun <init> (Lcom/android/build/api/variant/VariantExtensionConfig;)V
+	public abstract fun getDump ()Lorg/gradle/api/file/RegularFileProperty;
+	public abstract fun getEnabled ()Lorg/gradle/api/provider/Property;
+	public abstract fun getForcePlant ()Lorg/gradle/api/provider/Property;
+}
+
+public final class io/github/ryunen344/log2timber/dsl/ExtensionKt {
+	public static final fun log2timber (Lcom/android/build/api/dsl/ApplicationBuildType;Lorg/gradle/api/Action;)V
+	public static final fun log2timber (Lcom/android/build/api/dsl/ApplicationProductFlavor;Lorg/gradle/api/Action;)V
+}
+
+public final class io/github/ryunen344/log2timber/visitor/Log2TimberClassVisitor : org/objectweb/asm/ClassVisitor {
+	public fun <init> (ILorg/objectweb/asm/ClassVisitor;ZLorg/gradle/api/file/RegularFile;)V
+	public fun visit (IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)V
+	public fun visitEnd ()V
+	public fun visitMethod (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Lorg/objectweb/asm/MethodVisitor;
+}
+
+public final class io/github/ryunen344/log2timber/visitor/Log2TimberMethodVisitor : org/objectweb/asm/MethodVisitor {
+	public fun <init> (ILorg/objectweb/asm/MethodVisitor;ZLkotlin/jvm/functions/Function5;Lkotlin/jvm/functions/Function0;)V
+	public fun visitEnd ()V
+	public fun visitMethodInsn (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V
+}
+
+public abstract class io/github/ryunen344/log2timber/visitor/Log2TimberVisitorFactory : com/android/build/api/instrumentation/AsmClassVisitorFactory {
 	public fun <init> ()V
 	public fun createClassVisitor (Lcom/android/build/api/instrumentation/ClassContext;Lorg/objectweb/asm/ClassVisitor;)Lorg/objectweb/asm/ClassVisitor;
 	public fun isInstrumentable (Lcom/android/build/api/instrumentation/ClassData;)Z
 }
 
-public abstract interface class io/github/ryunen344/log2timber/Log2TimberVisitorFactory$Parameter : com/android/build/api/instrumentation/InstrumentationParameters {
+public abstract interface class io/github/ryunen344/log2timber/visitor/Log2TimberVisitorFactory$Parameter : com/android/build/api/instrumentation/InstrumentationParameters {
+	public abstract fun getDump ()Lorg/gradle/api/file/RegularFileProperty;
+	public abstract fun getForcePlant ()Lorg/gradle/api/provider/Property;
 }
 

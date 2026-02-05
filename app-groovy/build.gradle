@@ -43,6 +43,10 @@ android {
     buildTypes {
         debug {
             signingConfig = signingConfigs.debug
+            log2timber {
+                forcePlant = true
+                dump = layout.buildDirectory.file("log2timber/debug-output.txt")
+            }
         }
 
         release {
@@ -50,6 +54,10 @@ android {
             minifyEnabled = true
             shrinkResources = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            log2timber {
+                forcePlant = false
+                dump = layout.buildDirectory.file("log2timber/release-output.txt")
+            }
         }
     }
     lint {
