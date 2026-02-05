@@ -17,22 +17,18 @@
  * License-Filename: LICENSE
  */
 
-package io.github.ryunen344.log2timber
+package io.github.ryunen344.log2timber.dsl
 
-import org.objectweb.asm.ClassVisitor
-import org.objectweb.asm.MethodVisitor
+import com.android.build.api.dsl.ApplicationBuildType
+import com.android.build.api.dsl.ApplicationProductFlavor
+import io.github.ryunen344.log2timber.Log2TimberDslExtension
+import org.gradle.api.Action
+import org.gradle.api.plugins.ExtensionAware
 
-public class Log2TimberClassVisitor(
-    api: Int,
-    cv: ClassVisitor,
-) : ClassVisitor(api, cv) {
-    override fun visitMethod(
-        access: Int,
-        name: String?,
-        descriptor: String?,
-        signature: String?,
-        exceptions: Array<out String?>?,
-    ): MethodVisitor {
-        return Log2TimberMethodVisitor(api, cv.visitMethod(access, name, descriptor, signature, exceptions))
-    }
+public fun ApplicationBuildType.log2timber(action: Action<Log2TimberDslExtension>) {
+    (this as ExtensionAware).extensions.configure(Log2TimberDslExtension::class.java, action)
+}
+
+public fun ApplicationProductFlavor.log2timber(action: Action<Log2TimberDslExtension>) {
+    (this as ExtensionAware).extensions.configure(Log2TimberDslExtension::class.java, action)
 }

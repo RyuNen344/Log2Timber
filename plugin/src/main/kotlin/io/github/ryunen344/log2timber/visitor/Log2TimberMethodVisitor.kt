@@ -17,7 +17,7 @@
  * License-Filename: LICENSE
  */
 
-package io.github.ryunen344.log2timber
+package io.github.ryunen344.log2timber.visitor
 
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
@@ -27,6 +27,15 @@ import org.slf4j.LoggerFactory
 public class Log2TimberMethodVisitor(
     api: Int,
     methodVisitor: MethodVisitor,
+    private val forcePlant: Boolean,
+    private val onTransform: (
+        opcode: Int,
+        owner: String?,
+        name: String?,
+        descriptor: String?,
+        isInterface: Boolean,
+    ) -> Unit,
+    private val onVisitEnd: () -> Unit,
 ) : MethodVisitor(api, methodVisitor) {
 
     private val logger: Logger by lazy { LoggerFactory.getLogger(javaClass) }
@@ -39,6 +48,7 @@ public class Log2TimberMethodVisitor(
         isInterface: Boolean,
     ) {
         if (owner == "android/util/Log") {
+            onTransform(opcode, owner, name, descriptor, isInterface)
             when (name) {
                 "d", "i", "w", "e", "v", "wtf" -> {
                     when (descriptor) {
@@ -156,14 +166,18 @@ public class Log2TimberMethodVisitor(
                 // Log.isLoggable(tag: String, level: Int): Boolean
                 // isLoggable(Ljava/lang/String;I)Z
                 "isLoggable" -> {
-                    // stack: [tag, level]
+                    if (forcePlant) {
+                        // stack: [tag, level]
 
-                    // pop arguments
-                    // stack: [tag, level] -> []
-                    super.visitInsn(Opcodes.POP2)
+                        // pop arguments
+                        // stack: [tag, level] -> []
+                        super.visitInsn(Opcodes.POP2)
 
-                    // push true
-                    super.visitInsn(Opcodes.ICONST_1)
+                        // push true
+                        super.visitInsn(Opcodes.ICONST_1)
+                    } else {
+                        super.visitMethodInsn(opcode, owner, name, descriptor, isInterface)
+                    }
                 }
 
                 // Log.println(priority: Int, tag: String, message: String): Int
@@ -181,5 +195,10 @@ public class Log2TimberMethodVisitor(
         } else {
             super.visitMethodInsn(opcode, owner, name, descriptor, isInterface)
         }
+    }
+
+    override fun visitEnd() {
+        onVisitEnd()
+        super.visitEnd()
     }
 }

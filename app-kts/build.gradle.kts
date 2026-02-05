@@ -19,6 +19,7 @@
 
 import com.android.builder.signing.DefaultSigningConfig.Companion.DEFAULT_ALIAS
 import com.android.builder.signing.DefaultSigningConfig.Companion.DEFAULT_PASSWORD
+import io.github.ryunen344.log2timber.dsl.log2timber
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -67,6 +68,10 @@ android {
         create("demo") {
             dimension = "version"
             applicationId = "io.github.ryunen344.log2timber.app.kts.demo"
+            log2timber {
+                enabled = true
+                forcePlant = true
+            }
         }
         create("full") {
             dimension = "version"
@@ -80,6 +85,10 @@ android {
         }
 
         release {
+            log2timber {
+                enabled = false
+                forcePlant = false
+            }
             signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = true
             isShrinkResources = true
