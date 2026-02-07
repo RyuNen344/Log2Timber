@@ -50,7 +50,6 @@ public abstract class Log2TimberVariantDslExtension @Inject constructor(
     public abstract val dump: RegularFileProperty
 
     init {
-        // FIXME implement test
         val productFlavors = config.productFlavorsExtensions(Log2TimberDslExtension::class.java)
         val buildType = config.buildTypeExtension(Log2TimberDslExtension::class.java)
         (productFlavors.reversed() + listOf(buildType)).forEach { extension ->
@@ -69,6 +68,7 @@ public abstract class Log2TimberVariantDslExtension @Inject constructor(
     }
 
     private companion object {
+        @Suppress("UNUSED")
         private const val serialVersionUID = 23466453743L
     }
 }
