@@ -17,15 +17,24 @@
  * License-Filename: LICENSE
  */
 
-package io.github.ryunen344.log2timber
+package io.github.ryunen344.log2timber.assertions
 
-import assertk.assertThat
-import assertk.assertions.isTrue
-import org.junit.jupiter.api.Test
+import assertk.Assert
+import assertk.assertions.prop
+import assertk.assertions.support.expected
+import org.gradle.api.provider.Provider
 
-class FooTest {
-    @Test
-    fun test() {
-        assertThat(true).isTrue()
+fun <T> Assert<Provider<T>>.value(): Assert<T> = prop("value") { actual -> actual.get() }
+
+fun <T> Assert<Provider<T>>.isPresent(): Assert<Provider<T>> = transform { actual ->
+    if (actual.isPresent) {
+        actual
+    } else {
+        expected("to be present")
     }
+}
+
+fun <T> Assert<Provider<T>>.isAbsent() = given { actual ->
+    if (!actual.isPresent) return
+    expected("to be absent")
 }

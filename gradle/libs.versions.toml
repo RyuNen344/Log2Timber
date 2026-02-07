@@ -70,6 +70,7 @@ androidx-test-ext-truth = { module = "androidx.test.ext:truth", version.ref = "a
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test-rules" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-runner" }
 androidx-trace = { module = "androidx.tracing:tracing", version.ref = "androidx-tracing" }
+com-android-tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 com-android-tools-build-gradle-api = { module = "com.android.tools.build:gradle-api", version.ref = "agp" }
 com-google-material = { module = "com.google.android.material:material", version.ref = "com-google-material" }
 com-google-truth-truth = { module = "com.google.truth:truth", version.ref = "com-google-truth" }
