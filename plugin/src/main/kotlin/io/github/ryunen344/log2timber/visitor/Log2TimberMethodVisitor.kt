@@ -52,7 +52,7 @@ public class Log2TimberMethodVisitor(
             when (name) {
                 "d", "i", "w", "e", "v", "wtf" -> {
                     when (descriptor) {
-                        // Log.{d,i,w,e,v,wtf}(tag: String, message: String): Int
+                        // Log.{v,d,i,w,e,wtf}(tag: String, message: String): Int
                         "(Ljava/lang/String;Ljava/lang/String;)I" -> {
                             // stack: [tag, message] -> [message, tag]
                             super.visitInsn(Opcodes.SWAP)
@@ -73,7 +73,7 @@ public class Log2TimberMethodVisitor(
                             super.visitInsn(Opcodes.ICONST_0)
                             super.visitTypeInsn(Opcodes.ANEWARRAY, "java/lang/Object")
 
-                            // call Timber$Tree.{ d, i, w, e, v, wtf }
+                            // call Timber$Tree.{v,d,i,w,e,wtf}
                             super.visitMethodInsn(
                                 Opcodes.INVOKEVIRTUAL,
                                 $$"timber/log/Timber$Tree",
@@ -82,11 +82,11 @@ public class Log2TimberMethodVisitor(
                                 false,
                             )
 
-                            // Log.{d,i,w,e,v,wtf} returns int, so push 0 to stack
+                            // Log.{v,d,i,w,e,wtf} returns int, so push 0 to stack
                             super.visitInsn(Opcodes.ICONST_0)
                         }
 
-                        // Log.{d,i,w,e,v,wtf}(tag: String, throwable: Throwable): Int
+                        // Log.{w,wtf}(tag: String, throwable: Throwable): Int
                         "(Ljava/lang/String;Ljava/lang/Throwable;)I" -> {
                             // stack: [tag, throwable] -> [throwable, tag]
                             super.visitInsn(Opcodes.SWAP)
@@ -103,7 +103,7 @@ public class Log2TimberMethodVisitor(
                             // stack: [throwable, Timber$Tree]
                             super.visitInsn(Opcodes.SWAP)
 
-                            // call Timber$Tree.{ d, i, w, e, v, wtf }
+                            // call Timber$Tree.{w,wtf}
                             super.visitMethodInsn(
                                 Opcodes.INVOKEVIRTUAL,
                                 $$"timber/log/Timber$Tree",
@@ -112,7 +112,7 @@ public class Log2TimberMethodVisitor(
                                 false,
                             )
 
-                            // Log.{d,i,w,e,v,wtf} returns void, so push 0 to stack
+                            // Log.{w,wtf} returns void, so push 0 to stack
                             super.visitInsn(Opcodes.ICONST_0)
                         }
 
@@ -167,9 +167,6 @@ public class Log2TimberMethodVisitor(
                 // isLoggable(Ljava/lang/String;I)Z
                 "isLoggable" -> {
                     if (forcePlant) {
-                        // stack: [tag, level]
-
-                        // pop arguments
                         // stack: [tag, level] -> []
                         super.visitInsn(Opcodes.POP2)
 
@@ -183,8 +180,38 @@ public class Log2TimberMethodVisitor(
                 // Log.println(priority: Int, tag: String, message: String): Int
                 // println(ILjava/lang/String;Ljava/lang/String;)I
                 "println" -> {
-                    // transform nothing
-                    super.visitMethodInsn(opcode, owner, name, descriptor, isInterface)
+                    // stack: [priority, tag, message] -> [priority, message, tag]
+                    super.visitInsn(Opcodes.SWAP)
+
+                    // call Timber.tag(tag)
+                    super.visitMethodInsn(
+                        Opcodes.INVOKESTATIC,
+                        "timber/log/Timber",
+                        "tag",
+                        $$"(Ljava/lang/String;)Ltimber/log/Timber$Tree;",
+                        false,
+                    )
+
+                    // stack: [priority, message, Timber$Tree] -> [Timber$Tree, priority, message, Timber$Tree]
+                    super.visitInsn(Opcodes.DUP_X2)
+                    // stack: [Timber$Tree, priority, message, Timber$Tree] -> [Timber$Tree, priority, message]
+                    super.visitInsn(Opcodes.POP)
+
+                    // empty Object[] for varargs
+                    super.visitInsn(Opcodes.ICONST_0)
+                    super.visitTypeInsn(Opcodes.ANEWARRAY, "java/lang/Object")
+
+                    // call Timber$Tree.log
+                    super.visitMethodInsn(
+                        Opcodes.INVOKEVIRTUAL,
+                        $$"timber/log/Timber$Tree",
+                        "log",
+                        "(ILjava/lang/String;[Ljava/lang/Object;)V",
+                        false,
+                    )
+
+                    // Log.println returns int, so push 0 to stack
+                    super.visitInsn(Opcodes.ICONST_0)
                 }
 
                 else -> {
