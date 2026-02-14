@@ -19,13 +19,11 @@
 
 package io.github.ryunen344.log2timber
 
-import com.android.build.api.artifact.ScopedArtifact
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.instrumentation.FramesComputationMode
 import com.android.build.api.instrumentation.InstrumentationScope
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import com.android.build.api.variant.DslExtension
-import com.android.build.api.variant.ScopedArtifacts
 import com.android.build.gradle.AppPlugin
 import io.github.ryunen344.log2timber.visitor.Log2TimberVisitorFactory
 import org.gradle.api.Plugin
@@ -35,13 +33,9 @@ import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Delete
-import org.gradle.internal.extensions.stdlib.capitalized
 import org.gradle.kotlin.dsl.findPlugin
 import org.gradle.kotlin.dsl.getByType
-import org.gradle.kotlin.dsl.register
 
-@Suppress("UnstableApiUsage")
 public class Log2TimberPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         val plugin = target.plugins.findPlugin(AppPlugin::class)
@@ -80,46 +74,24 @@ public class Log2TimberPlugin : Plugin<Project> {
                 val variantExtension = variant.getExtension(Log2TimberVariantDslExtension::class.java)
                 val projectExtension = (common as ExtensionAware).extensions.getByType(Log2TimberDslExtension::class.java)
                 val enabled = variantExtension?.enabled?.takeIf(Property<Boolean>::isPresent) ?: projectExtension.enabled.convention(true)
+                val forcePlant = variantExtension?.forcePlant?.takeIf(Property<Boolean>::isPresent)
+                    ?: projectExtension.forcePlant.convention(true)
+                val dump = variantExtension?.dump?.takeIf(RegularFileProperty::isPresent) ?: projectExtension.dump
                 if (enabled.get()) {
-                    val forcePlant = variantExtension?.forcePlant?.takeIf(Property<Boolean>::isPresent)
-                        ?: projectExtension.forcePlant.convention(true)
-                    val dump = variantExtension?.dump?.takeIf(RegularFileProperty::isPresent) ?: projectExtension.dump
+                    val service = target.gradle.sharedServices.registerIfAbsent(
+                        "log2timber-${variant.name}-dump",
+                        DumpWriterService::class.java,
+                    ) {
+                        it.parameters.dump.set(dump)
+                        it.maxParallelUsages.set(1)
+                    }
 
-                    val intermediates = target.objects.fileProperty()
-                    if (dump.isPresent) {
-                        intermediates.set(
-                            target.layout.buildDirectory.file(
-                                "intermediates/log2timber/${variant.name.capitalized()}/${dump.get().asFile.name}",
-                            ),
-                        )
-
-                        // clean up debug output file before build
-                        val cleanupTask = target.tasks.register<Delete>(variant.computeTaskName("clean", "Log2Timber")) {
-                            setDelete(dump)
-                        }
-                        variant.lifecycleTasks.registerPreBuild(cleanupTask)
-                        variant.instrumentation.transformClassesWith(
-                            Log2TimberVisitorFactory::class.java,
-                            InstrumentationScope.ALL,
-                        ) {
-                            it.forcePlant.set(forcePlant)
-                            it.dump.set(intermediates)
-                        }
-
-                        val dumpTask = target.tasks.register<DumpLog2TimberTask>(variant.computeTaskName("dump", "Log2Timber")) {
-                            input.set(intermediates)
-                            output.set(dump)
-                        }
-
-                        variant.artifacts
-                            .forScope(ScopedArtifacts.Scope.ALL)
-                            .use(dumpTask)
-                            .toTransform(
-                                ScopedArtifact.CLASSES,
-                                DumpLog2TimberTask::inputJars,
-                                DumpLog2TimberTask::inputDirectories,
-                                DumpLog2TimberTask::into,
-                            )
+                    variant.instrumentation.transformClassesWith(
+                        Log2TimberVisitorFactory::class.java,
+                        InstrumentationScope.ALL,
+                    ) {
+                        it.service.set(service)
+                        it.forcePlant.set(forcePlant)
                     }
 
                     // Log to Timber transformation may change the stack map frames.

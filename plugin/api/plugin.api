@@ -1,11 +1,11 @@
-public abstract class io/github/ryunen344/log2timber/DumpLog2TimberTask : org/gradle/api/DefaultTask {
+public abstract class io/github/ryunen344/log2timber/DumpWriterService : java/lang/AutoCloseable, org/gradle/api/services/BuildService {
 	public fun <init> ()V
-	public final fun action ()V
-	public abstract fun getInput ()Lorg/gradle/api/file/RegularFileProperty;
-	public abstract fun getInputDirectories ()Lorg/gradle/api/provider/ListProperty;
-	public abstract fun getInputJars ()Lorg/gradle/api/provider/ListProperty;
-	public abstract fun getInto ()Lorg/gradle/api/file/RegularFileProperty;
-	public abstract fun getOutput ()Lorg/gradle/api/file/RegularFileProperty;
+	public fun close ()V
+	public final fun getWriter ()Ljava/io/PrintWriter;
+}
+
+public abstract interface class io/github/ryunen344/log2timber/DumpWriterService$Params : org/gradle/api/services/BuildServiceParameters {
+	public abstract fun getDump ()Lorg/gradle/api/file/RegularFileProperty;
 }
 
 public abstract class io/github/ryunen344/log2timber/Log2TimberDslExtension {
@@ -42,7 +42,7 @@ public final class io/github/ryunen344/log2timber/dsl/ExtensionKt {
 }
 
 public final class io/github/ryunen344/log2timber/visitor/Log2TimberClassVisitor : org/objectweb/asm/ClassVisitor {
-	public fun <init> (ILorg/objectweb/asm/ClassVisitor;ZLorg/gradle/api/file/RegularFile;)V
+	public fun <init> (ILorg/objectweb/asm/ClassVisitor;ZLjava/io/PrintWriter;)V
 	public fun visit (IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)V
 	public fun visitEnd ()V
 	public fun visitMethod (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Lorg/objectweb/asm/MethodVisitor;
@@ -61,7 +61,7 @@ public abstract class io/github/ryunen344/log2timber/visitor/Log2TimberVisitorFa
 }
 
 public abstract interface class io/github/ryunen344/log2timber/visitor/Log2TimberVisitorFactory$Parameter : com/android/build/api/instrumentation/InstrumentationParameters {
-	public abstract fun getDump ()Lorg/gradle/api/file/RegularFileProperty;
 	public abstract fun getForcePlant ()Lorg/gradle/api/provider/Property;
+	public abstract fun getService ()Lorg/gradle/api/provider/Property;
 }
 
