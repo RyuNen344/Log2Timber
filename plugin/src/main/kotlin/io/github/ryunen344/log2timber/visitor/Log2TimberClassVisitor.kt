@@ -19,29 +19,21 @@
 
 package io.github.ryunen344.log2timber.visitor
 
-import org.gradle.api.file.RegularFile
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.util.Textifier
-import java.io.FileOutputStream
 import java.io.PrintWriter
 
 public class Log2TimberClassVisitor(
     api: Int,
     cv: ClassVisitor,
     private val forcePlant: Boolean,
-    private val regularFile: RegularFile?,
+    private val writer: PrintWriter?,
 ) : ClassVisitor(api, cv) {
 
     private var count: Int = 0
 
     private val textifier: Textifier by lazy { Textifier() }
-
-    private val writer: PrintWriter? by lazy {
-        regularFile?.asFile?.let {
-            PrintWriter(FileOutputStream(it, true).buffered().writer())
-        }
-    }
 
     override fun visit(version: Int, access: Int, name: String?, signature: String?, superName: String?, interfaces: Array<out String?>?) {
         count = 0
