@@ -45,7 +45,8 @@ public abstract class Log2TimberVisitorFactory : AsmClassVisitorFactory<Log2Timb
     }
 
     override fun isInstrumentable(classData: ClassData): Boolean {
-        return !(TIMBER_CLASS.contains(classData.className) || classData.superClasses.any { TIMBER_CLASS.contains(it) })
+        return (listOf(classData.className) + classData.superClasses)
+            .none { it in TIMBER_CLASS || it in ASM_INCOMPATIBLE_CLASSES }
     }
 
     public interface Parameter : InstrumentationParameters {
@@ -57,12 +58,25 @@ public abstract class Log2TimberVisitorFactory : AsmClassVisitorFactory<Log2Timb
     }
 
     private companion object {
-        val TIMBER_CLASS: List<String> = listOf(
+        val TIMBER_CLASS: Set<String> = setOf(
             $$"timber.log.Timber$Tree",
             "timber.log.Timber",
             $$"timber.log.Timber$Forest",
             $$"timber.log.Timber$DebugTree$Companion",
             $$"timber.log.Timber$DebugTree",
+        )
+
+        val ASM_INCOMPATIBLE_CLASSES: Set<String> = setOf(
+            // compose-animation-tooling-internal (class for Android Studio Preview, not available in compile classpath)
+            "androidx.compose.animation.tooling.ComposeAnimatedProperty",
+            // window extensions (implemented by OEMs, not available in compile classpath)
+            $$"androidx.window.extensions.embedding.AnimationBackground$ColorBackground",
+            "androidx.window.extensions.embedding.AnimationBackground",
+            "androidx.window.extensions.embedding.ActivityEmbeddingComponent",
+            $$"androidx.window.extensions.embedding.ActivityStack$Token",
+            "androidx.window.extensions.embedding.ActivityStack",
+            "androidx.window.sidecar.SidecarDeviceState",
+            "androidx.window.sidecar.SidecarInterface",
         )
     }
 }
