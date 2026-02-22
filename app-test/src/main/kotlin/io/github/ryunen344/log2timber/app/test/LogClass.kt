@@ -32,7 +32,8 @@ class LogClass {
     }
 
     fun vThrowable() {
-        Log.v(TAG, MESSAGE, throwable)
+        Log.v(TAG, MESSAGE, throwable
+        )
     }
 
     companion object {
