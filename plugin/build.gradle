@@ -40,13 +40,14 @@ gradlePlugin {
 }
 
 dependencies {
+    implementation libs.org.ow2.asm.util
     compileOnly libs.com.android.tools.build.gradle.api
     compileOnly gradleApi()
     compileOnly fileTree(dir: "${gradle.gradleHomeDir}/lib", include: "gradle-kotlin-dsl-*.jar")
-    implementation libs.org.ow2.asm.util
+    testImplementation libs.org.ow2.asm.test
     testImplementation libs.com.android.tools.build.gradle
-    testImplementation libs.com.willowtreeapps.assertk
     testImplementation gradleTestKit()
+    testImplementation libs.com.willowtreeapps.assertk
     testImplementation libs.org.junit.jupiter.jupiter
     testRuntimeOnly libs.org.junit.platform.launcher
 }

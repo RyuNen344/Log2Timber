@@ -107,9 +107,6 @@ android {
         unitTests.isIncludeAndroidResources = true
         unitTests.isReturnDefaultValues = true
         unitTests.all { test ->
-            test.systemProperty("robolectric.logging", "stdout")
-            test.systemProperty("robolectric.logging.enabled", "true")
-            test.systemProperty("robolectric.graphicsMode", "NATIVE")
             test.testLogging.showStandardStreams = true
         }
     }
@@ -158,21 +155,4 @@ dependencies {
     implementation(libs.org.jetbrains.kotlinx.serialization.json)
     implementation(libs.org.jetbrains.kotlinx.serialization.json.okio)
     implementation(libs.timber)
-
-    // test
-    testImplementation(libs.junit)
-    testImplementation(libs.com.google.truth.truth)
-    testImplementation(libs.androidx.test.core)
-    testImplementation(libs.androidx.test.rules)
-    testImplementation(libs.androidx.test.runner)
-    testImplementation(libs.androidx.test.ext.junit)
-    testImplementation(libs.androidx.test.ext.truth)
-    testImplementation(libs.com.willowtreeapps.assertk)
-    testImplementation(libs.io.mockk)
-    testImplementation(libs.io.mockk.agent)
-    testImplementation(libs.org.jetbrains.kotlin.test)
-    testImplementation(libs.org.jetbrains.kotlin.reflect)
-    testImplementation(libs.org.jetbrains.kotlinx.coroutine.debug)
-    testImplementation(libs.org.jetbrains.kotlinx.coroutine.test)
-    testImplementation(libs.org.robolectric.robolectric)
 }
