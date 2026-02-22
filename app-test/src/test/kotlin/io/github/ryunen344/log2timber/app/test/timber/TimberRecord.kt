@@ -21,7 +21,30 @@ package io.github.ryunen344.log2timber.app.test.timber
 
 data class TimberRecord(
     val priority: Int,
-    val tag: String? = null,
+    val tag: String?,
     val message: String,
     val t: Throwable? = null,
-)
+) {
+    companion object {
+        /**
+         * [timber.log.Timber.prepareLog] appends stack trace to message
+         */
+        fun exception(
+            priority: Int,
+            tag: String?,
+            message: String?,
+            t: Throwable,
+        ): TimberRecord {
+            return TimberRecord(
+                priority = priority,
+                tag = tag,
+                message = if (message.isNullOrEmpty()) {
+                    t.stackTraceToString()
+                } else {
+                    message + "\n" + t.stackTraceToString()
+                },
+                t = t,
+            )
+        }
+    }
+}

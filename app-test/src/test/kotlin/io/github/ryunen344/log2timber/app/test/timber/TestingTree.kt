@@ -21,7 +21,7 @@ package io.github.ryunen344.log2timber.app.test.timber
 
 import timber.log.Timber
 
-class TestingTree : Timber.Tree() {
+class TestingTree : Timber.DebugTree() {
 
     private val _stack: MutableList<TimberRecord> = mutableListOf()
     val stack: List<TimberRecord> = _stack
@@ -31,12 +31,7 @@ class TestingTree : Timber.Tree() {
             TimberRecord(
                 priority = priority,
                 tag = tag,
-                message = if (t == null) {
-                    message
-                } else {
-                    // Timber.prepareLog appends stack trace to message
-                    message.substring(0, message.length - (t.stackTraceToString().length + 1))
-                },
+                message = message,
                 t = t,
             ),
         )
