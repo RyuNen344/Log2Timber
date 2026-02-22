@@ -1,0 +1,1 @@
+-printconfiguration proguard-rules-merged.pro

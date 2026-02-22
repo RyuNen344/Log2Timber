@@ -29,14 +29,14 @@ plugins {
 }
 
 android {
-    namespace = "io.github.ryunen344.log2timber.app.kts"
+    namespace = "io.github.ryunen344.log2timber.app.test"
     compileSdk {
         version = release(36)
     }
     buildToolsVersion = "36.1.0"
 
     defaultConfig {
-        applicationId = "io.github.ryunen344.log2timber.app.kts"
+        applicationId = "io.github.ryunen344.log2timber.app.test"
         minSdk {
             version = release(31)
         }
@@ -63,32 +63,16 @@ android {
         }
     }
 
-    flavorDimensions += "version"
-    productFlavors {
-        create("demo") {
-            dimension = "version"
-            applicationId = "io.github.ryunen344.log2timber.app.kts.demo"
+    buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("debug")
             log2timber {
                 enabled = true
                 forcePlant = true
             }
         }
-        create("full") {
-            dimension = "version"
-            applicationId = "io.github.ryunen344.log2timber.app.kts.full"
-        }
-    }
-
-    buildTypes {
-        debug {
-            signingConfig = signingConfigs.getByName("debug")
-        }
 
         release {
-            log2timber {
-                enabled = false
-                forcePlant = false
-            }
             signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = true
             isShrinkResources = true
@@ -132,31 +116,13 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.collection)
-    implementation(libs.androidx.compose.animation)
-    implementation(libs.androidx.compose.foundation)
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.runtime)
-    implementation(libs.androidx.compose.runtime.tracing)
     implementation(libs.androidx.core)
-    implementation(libs.androidx.emoji2)
-    implementation(libs.androidx.fragment)
-    implementation(libs.androidx.lifecycle.runtime)
-    implementation(libs.androidx.lifecycle.viewmodel)
-    implementation(libs.androidx.lifecycle.viewmodel.savedstate)
     implementation(libs.androidx.lifecycle.process)
-    implementation(libs.androidx.palette)
-    implementation(libs.androidx.startup.runtime)
-    implementation(libs.androidx.trace)
-    implementation(libs.com.google.material)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    implementation(libs.org.jetbrains.kotlinx.coroutine.android)
-    implementation(libs.org.jetbrains.kotlinx.serialization.core)
-    implementation(libs.org.jetbrains.kotlinx.serialization.json)
-    implementation(libs.org.jetbrains.kotlinx.serialization.json.okio)
     implementation(libs.timber)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.com.willowtreeapps.assertk)
+    testImplementation(libs.org.jetbrains.kotlin.test)
+    testImplementation(libs.org.jetbrains.kotlin.reflect)
 }
