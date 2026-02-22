@@ -31,7 +31,12 @@ class TestingTree : Timber.Tree() {
             TimberRecord(
                 priority = priority,
                 tag = tag,
-                message = message,
+                message = if (t == null) {
+                    message
+                } else {
+                    // Timber.prepareLog appends stack trace to message
+                    message.substring(0, message.length - (t.stackTraceToString().length + 1))
+                },
                 t = t,
             ),
         )

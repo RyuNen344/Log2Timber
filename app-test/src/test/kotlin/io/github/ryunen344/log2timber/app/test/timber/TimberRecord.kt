@@ -21,7 +21,7 @@ package io.github.ryunen344.log2timber.app.test.timber
 
 data class TimberRecord(
     val priority: Int,
-    val tag: String?,
+    val tag: String? = null,
     val message: String,
-    val t: Throwable?,
+    val t: Throwable? = null,
 )
