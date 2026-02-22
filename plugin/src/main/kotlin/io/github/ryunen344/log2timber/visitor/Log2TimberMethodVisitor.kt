@@ -78,7 +78,7 @@ public class Log2TimberMethodVisitor(
                                 false,
                             )
 
-                            // stack: [message, Timber$Tree]　-> [Timber$Tree, message]
+                            // stack: [message, Timber$Tree] -> [Timber$Tree, message]
                             super.visitInsn(Opcodes.SWAP)
 
                             // empty Object[] for varargs
