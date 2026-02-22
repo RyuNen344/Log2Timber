@@ -96,7 +96,6 @@ jobs:
       - uses: dorny/test-reporter@v2
         if: ${{ !cancelled() }}
         with:
-          name: unit-test-result-${{ matrix.task }}
           path: '**/test-results/**/*.xml'
           reporter: java-junit
           fail-on-error: false
