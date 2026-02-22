@@ -92,11 +92,11 @@ jobs:
       - name: functional test
         shell: bash
         run: |
-          ./gradlew :app-test:testDebugUnitTest
+          ./gradlew :app-test:koverXmlReportDebug
       - uses: dorny/test-reporter@v2
         if: ${{ !cancelled() }}
         with:
-          name: unit-test-result-${{ matrix.task }}
+          name: unit-test-result
           path: '**/test-results/**/*.xml'
           reporter: java-junit
           fail-on-error: false
@@ -105,6 +105,7 @@ jobs:
         with:
           paths: |
             ${{ github.workspace }}/plugin/build/reports/kover/report.xml
+            ${{ github.workspace }}/app-test/build/reports/kover/reportDebug.xml
           title: coverage report
           update-comment: true
           comment-type: both
