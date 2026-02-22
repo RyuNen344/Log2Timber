@@ -1,0 +1,124 @@
+/*
+ * Copyright (C) 2026 RyuNen344
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ * License-Filename: LICENSE
+ */
+
+import com.android.builder.signing.DefaultSigningConfig.Companion.DEFAULT_ALIAS
+import com.android.builder.signing.DefaultSigningConfig.Companion.DEFAULT_PASSWORD
+import io.github.ryunen344.log2timber.dsl.log2timber
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+plugins {
+    alias(libs.plugins.com.android.application)
+    alias(libs.plugins.org.jetbrains.kotlin.android)
+    id("log2timber").version("+")
+}
+
+android {
+    namespace = "io.github.ryunen344.log2timber.app.test"
+    compileSdk {
+        version = release(36)
+    }
+    buildToolsVersion = "36.1.0"
+
+    defaultConfig {
+        applicationId = "io.github.ryunen344.log2timber.app.test"
+        minSdk {
+            version = release(31)
+        }
+        targetSdk {
+            version = release(36)
+        }
+        versionCode = 1
+        versionName = "1.0.0"
+    }
+
+    buildFeatures {
+        buildConfig = true
+        viewBinding = true
+    }
+
+    signingConfigs {
+        getByName("debug") {
+            storeFile = layout.settingsDirectory.dir("..").dir("keystore").file("debug.keystore").asFile
+            storePassword = DEFAULT_PASSWORD
+            keyAlias = DEFAULT_ALIAS
+            keyPassword = DEFAULT_PASSWORD
+            enableV3Signing = true
+            enableV4Signing = true
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("debug")
+            log2timber {
+                enabled = true
+                forcePlant = true
+            }
+        }
+
+        release {
+            signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
+        }
+    }
+
+    lint {
+        checkReleaseBuilds = false
+    }
+
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+        unitTests.isReturnDefaultValues = true
+        unitTests.all { test ->
+            test.testLogging.showStandardStreams = true
+        }
+    }
+
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+        sourceCompatibility(libs.versions.jdk.get())
+        targetCompatibility(libs.versions.jdk.get())
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
+    }
+}
+
+dependencies {
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.collection)
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.lifecycle.process)
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+    implementation(libs.timber)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.com.willowtreeapps.assertk)
+    testImplementation(libs.org.jetbrains.kotlin.test)
+    testImplementation(libs.org.jetbrains.kotlin.reflect)
+}

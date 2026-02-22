@@ -78,10 +78,14 @@ jobs:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/java
       - uses: ./.github/actions/gradle
-      - name: test
+      - name: plugin test
         shell: bash
         run: |
           ./gradlew koverXmlReport
+      - name: functional test
+        shell: bash
+        run: |
+          ./gradlew :app-test:testDebugUnitTest
       - uses: dorny/test-reporter@v2
         if: ${{ !cancelled() }}
         with:
