@@ -84,7 +84,11 @@ android {
     }
 
     lint {
+        lintConfig = layout.settingsDirectory.dir("..").dir(".lint").file("lint.xml").asFile
+        checkDependencies = true
+        checkGeneratedSources = false
         checkReleaseBuilds = false
+        sarifReport = true
     }
 
     testOptions {
