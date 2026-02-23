@@ -303,7 +303,6 @@ class LogClass {
 
     // region: println
     fun println() {
-        Log.ASSERT
         Log.println(Log.ASSERT, TAG, MESSAGE)
     }
 
