@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 RyuNen344
+ * Copyright (C) 2026-2026 RyuNen344
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  * License-Filename: LICENSE
  */
 
-package io.github.ryunen344.log2timber.app.test
+package io.github.ryunen344.log2timber.app.test.clazz
 
 import android.util.Log
 import assertk.assertThat
@@ -31,7 +31,7 @@ import org.junit.Before
 import org.junit.Test
 import timber.log.Timber
 
-class LogClassInfoTest {
+class LogClassErrorTest {
 
     lateinit var tree: TestingTree
     lateinit var target: LogClass
@@ -49,23 +49,23 @@ class LogClassInfoTest {
     }
 
     @Test
-    fun test_iIsLoggable() {
-        assertThat(target.iIsLoggable())
+    fun test_eIsLoggable() {
+        assertThat(target.eIsLoggable())
             .isTrue()
     }
 
     @Test
-    fun test_iIsLoggableTagNull() {
-        assertThat(target.iIsLoggableTagNull())
+    fun test_eIsLoggableTagNull() {
+        assertThat(target.eIsLoggableTagNull())
             .isTrue()
     }
 
     @Test
-    fun test_i2() {
-        target.i2()
+    fun test_e2() {
+        target.e2()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
-                Log.INFO,
+                Log.ERROR,
                 LogClass.TAG,
                 LogClass.MESSAGE,
             ),
@@ -73,11 +73,11 @@ class LogClassInfoTest {
     }
 
     @Test
-    fun test_i2TagNull() {
-        target.i2TagNull()
+    fun test_e2TagNull() {
+        target.e2TagNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
-                Log.INFO,
+                Log.ERROR,
                 LogClass.TAG,
                 LogClass.MESSAGE,
             ),
@@ -85,11 +85,11 @@ class LogClassInfoTest {
     }
 
     @Test
-    fun test_i3() {
-        target.i3()
+    fun test_e3() {
+        target.e3()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
-                Log.INFO,
+                Log.ERROR,
                 LogClass.TAG,
                 LogClass.MESSAGE,
                 LogClass.throwable,
@@ -98,11 +98,11 @@ class LogClassInfoTest {
     }
 
     @Test
-    fun test_i3MessageNull() {
-        target.i3MessageNull()
+    fun test_e3MessageNull() {
+        target.e3MessageNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
-                Log.INFO,
+                Log.ERROR,
                 LogClass.TAG,
                 null,
                 LogClass.throwable,
@@ -111,11 +111,11 @@ class LogClassInfoTest {
     }
 
     @Test
-    fun test_i3ThrowableNull() {
-        target.i3ThrowableNull()
+    fun test_e3ThrowableNull() {
+        target.e3ThrowableNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
-                Log.INFO,
+                Log.ERROR,
                 LogClass.TAG,
                 LogClass.MESSAGE,
             ),
@@ -123,17 +123,17 @@ class LogClassInfoTest {
     }
 
     @Test
-    fun test_i3TagOnly() {
-        target.i3TagOnly()
+    fun test_e3TagOnly() {
+        target.e3TagOnly()
         assertThat(tree.stack).isEmpty()
     }
 
     @Test
-    fun test_i3TagNull() {
-        target.i3TagNull()
+    fun test_e3TagNull() {
+        target.e3TagNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
-                Log.INFO,
+                Log.ERROR,
                 LogClass.TAG,
                 LogClass.MESSAGE,
                 LogClass.throwable,
@@ -142,11 +142,11 @@ class LogClassInfoTest {
     }
 
     @Test
-    fun test_i3ThrowableOnly() {
-        target.i3ThrowableOnly()
+    fun test_e3ThrowableOnly() {
+        target.e3ThrowableOnly()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
-                Log.INFO,
+                Log.ERROR,
                 LogClass.TAG,
                 null,
                 LogClass.throwable,
@@ -155,11 +155,11 @@ class LogClassInfoTest {
     }
 
     @Test
-    fun test_i3MessageOnly() {
-        target.i3MessageOnly()
+    fun test_e3MessageOnly() {
+        target.e3MessageOnly()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
-                Log.INFO,
+                Log.ERROR,
                 LogClass.TAG,
                 LogClass.MESSAGE,
             ),
@@ -167,8 +167,8 @@ class LogClassInfoTest {
     }
 
     @Test
-    fun test_i3Null() {
-        target.i3Null()
+    fun test_e3Null() {
+        target.e3Null()
         assertThat(tree.stack).isEmpty()
     }
 }

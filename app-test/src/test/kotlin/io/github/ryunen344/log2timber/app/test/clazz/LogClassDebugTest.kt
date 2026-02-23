@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 RyuNen344
+ * Copyright (C) 2026-2026 RyuNen344
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  * License-Filename: LICENSE
  */
 
-package io.github.ryunen344.log2timber.app.test
+package io.github.ryunen344.log2timber.app.test.clazz
 
 import android.util.Log
 import assertk.assertThat

@@ -17,7 +17,7 @@
  * License-Filename: LICENSE
  */
 
-package io.github.ryunen344.log2timber.app.test
+package io.github.ryunen344.log2timber.app.test.clazz
 
 import android.annotation.SuppressLint
 import android.util.Log

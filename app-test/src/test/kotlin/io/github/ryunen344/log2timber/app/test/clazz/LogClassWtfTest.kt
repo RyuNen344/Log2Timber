@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 RyuNen344
+ * Copyright (C) 2026-2026 RyuNen344
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  * License-Filename: LICENSE
  */
 
-package io.github.ryunen344.log2timber.app.test
+package io.github.ryunen344.log2timber.app.test.clazz
 
 import android.util.Log
 import assertk.assertThat
@@ -31,7 +31,7 @@ import org.junit.Before
 import org.junit.Test
 import timber.log.Timber
 
-class LogClassVerboseTest {
+class LogClassWtfTest {
 
     lateinit var tree: TestingTree
     lateinit var target: LogClass
@@ -49,23 +49,23 @@ class LogClassVerboseTest {
     }
 
     @Test
-    fun test_vIsLoggable() {
-        assertThat(target.vIsLoggable())
+    fun test_wtfIsLoggable() {
+        assertThat(target.wtfIsLoggable())
             .isTrue()
     }
 
     @Test
-    fun test_vIsLoggableTagNull() {
-        assertThat(target.vIsLoggableTagNull())
+    fun test_wtfIsLoggableTagNull() {
+        assertThat(target.wtfIsLoggableTagNull())
             .isTrue()
     }
 
     @Test
-    fun test_v2() {
-        target.v2()
+    fun test_wtf2() {
+        target.wtf2()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
-                Log.VERBOSE,
+                Log.ASSERT,
                 LogClass.TAG,
                 LogClass.MESSAGE,
             ),
@@ -73,11 +73,11 @@ class LogClassVerboseTest {
     }
 
     @Test
-    fun test_v2TagNull() {
-        target.v2TagNull()
+    fun test_wtf2TagNull() {
+        target.wtf2TagNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
-                Log.VERBOSE,
+                Log.ASSERT,
                 LogClass.TAG,
                 LogClass.MESSAGE,
             ),
@@ -85,24 +85,11 @@ class LogClassVerboseTest {
     }
 
     @Test
-    fun test_v3() {
-        target.v3()
+    fun test_wtf2Throwable() {
+        target.wtf2Throwable()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
-                Log.VERBOSE,
-                LogClass.TAG,
-                LogClass.MESSAGE,
-                LogClass.throwable,
-            ),
-        )
-    }
-
-    @Test
-    fun test_v3MessageNull() {
-        target.v3MessageNull()
-        assertThat(tree.stack).containsOnly(
-            TimberRecord.exception(
-                Log.VERBOSE,
+                Log.ASSERT,
                 LogClass.TAG,
                 null,
                 LogClass.throwable,
@@ -111,29 +98,30 @@ class LogClassVerboseTest {
     }
 
     @Test
-    fun test_v3ThrowableNull() {
-        target.v3ThrowableNull()
+    fun test_wtf2ThrowableTagNull() {
+        target.wtf2ThrowableTagNull()
         assertThat(tree.stack).containsOnly(
-            TimberRecord(
-                Log.VERBOSE,
+            TimberRecord.exception(
+                Log.ASSERT,
                 LogClass.TAG,
-                LogClass.MESSAGE,
+                null,
+                LogClass.throwable,
             ),
         )
     }
 
     @Test
-    fun test_v3TagOnly() {
-        target.v3TagOnly()
+    fun test_wtf2Null() {
+        target.wtf2Null()
         assertThat(tree.stack).isEmpty()
     }
 
     @Test
-    fun test_v3TagNull() {
-        target.v3TagNull()
+    fun test_wtf3() {
+        target.wtf3()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
-                Log.VERBOSE,
+                Log.ASSERT,
                 LogClass.TAG,
                 LogClass.MESSAGE,
                 LogClass.throwable,
@@ -142,11 +130,11 @@ class LogClassVerboseTest {
     }
 
     @Test
-    fun test_v3ThrowableOnly() {
-        target.v3ThrowableOnly()
+    fun test_wtf3MessageNull() {
+        target.wtf3MessageNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
-                Log.VERBOSE,
+                Log.ASSERT,
                 LogClass.TAG,
                 null,
                 LogClass.throwable,
@@ -155,11 +143,11 @@ class LogClassVerboseTest {
     }
 
     @Test
-    fun test_v3MessageOnly() {
-        target.v3MessageOnly()
+    fun test_wtf3ThrowableNull() {
+        target.wtf3ThrowableNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
-                Log.VERBOSE,
+                Log.ASSERT,
                 LogClass.TAG,
                 LogClass.MESSAGE,
             ),
@@ -167,8 +155,52 @@ class LogClassVerboseTest {
     }
 
     @Test
-    fun test_v3Null() {
-        target.v3Null()
+    fun test_wtf3TagOnly() {
+        target.wtf3TagOnly()
+        assertThat(tree.stack).isEmpty()
+    }
+
+    @Test
+    fun test_wtf3TagNull() {
+        target.wtf3TagNull()
+        assertThat(tree.stack).containsOnly(
+            TimberRecord.exception(
+                Log.ASSERT,
+                LogClass.TAG,
+                LogClass.MESSAGE,
+                LogClass.throwable,
+            ),
+        )
+    }
+
+    @Test
+    fun test_wtf3ThrowableOnly() {
+        target.wtf3ThrowableOnly()
+        assertThat(tree.stack).containsOnly(
+            TimberRecord.exception(
+                Log.ASSERT,
+                LogClass.TAG,
+                null,
+                LogClass.throwable,
+            ),
+        )
+    }
+
+    @Test
+    fun test_wtf3MessageOnly() {
+        target.wtf3MessageOnly()
+        assertThat(tree.stack).containsOnly(
+            TimberRecord(
+                Log.ASSERT,
+                LogClass.TAG,
+                LogClass.MESSAGE,
+            ),
+        )
+    }
+
+    @Test
+    fun test_wtf3Null() {
+        target.wtf3Null()
         assertThat(tree.stack).isEmpty()
     }
 }
