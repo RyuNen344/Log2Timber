@@ -17,7 +17,7 @@
  * License-Filename: LICENSE
  */
 
-package io.github.ryunen344.log2timber.app.test
+package io.github.ryunen344.log2timber.app.test.top
 
 import android.util.Log
 import assertk.assertThat
@@ -31,16 +31,14 @@ import org.junit.Before
 import org.junit.Test
 import timber.log.Timber
 
-class LogClassWarnTest {
+class LogTopLevelWtfTest {
 
     lateinit var tree: TestingTree
-    lateinit var target: LogClass
 
     @Before
     fun setup() {
         tree = TestingTree()
         Timber.plant(tree)
-        target = LogClass()
     }
 
     @After
@@ -49,158 +47,158 @@ class LogClassWarnTest {
     }
 
     @Test
-    fun test_wIsLoggable() {
-        assertThat(target.wIsLoggable())
+    fun test_wtfIsLoggable() {
+        assertThat(wtfIsLoggable())
             .isTrue()
     }
 
     @Test
-    fun test_wIsLoggableTagNull() {
-        assertThat(target.wIsLoggableTagNull())
+    fun test_wtfIsLoggableTagNull() {
+        assertThat(wtfIsLoggableTagNull())
             .isTrue()
     }
 
     @Test
-    fun test_w2() {
-        target.w2()
+    fun test_wtf2() {
+        wtf2()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
-                Log.WARN,
-                LogClass.TAG,
-                LogClass.MESSAGE,
+                Log.ASSERT,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
             ),
         )
     }
 
     @Test
-    fun test_w2TagNull() {
-        target.w2TagNull()
+    fun test_wtf2TagNull() {
+        wtf2TagNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
-                Log.WARN,
-                LogClass.TAG,
-                LogClass.MESSAGE,
+                Log.ASSERT,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
             ),
         )
     }
 
     @Test
-    fun test_w2Throwable() {
-        target.w2Throwable()
+    fun test_wtf2Throwable() {
+        wtf2Throwable()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
-                Log.WARN,
-                LogClass.TAG,
+                Log.ASSERT,
+                TOP_LEVEL_TAG,
                 null,
-                LogClass.throwable,
+                topLevelThrowable,
             ),
         )
     }
 
     @Test
-    fun test_w2ThrowableTagNull() {
-        target.w2ThrowableTagNull()
+    fun test_wtf2ThrowableTagNull() {
+        wtf2ThrowableTagNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
-                Log.WARN,
-                LogClass.TAG,
+                Log.ASSERT,
+                TOP_LEVEL_TAG,
                 null,
-                LogClass.throwable,
+                topLevelThrowable,
             ),
         )
     }
 
     @Test
-    fun test_w2Null() {
-        target.w2Null()
+    fun test_wtf2Null() {
+        wtf2Null()
         assertThat(tree.stack).isEmpty()
     }
 
     @Test
-    fun test_w3() {
-        target.w3()
+    fun test_wtf3() {
+        wtf3()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
-                Log.WARN,
-                LogClass.TAG,
-                LogClass.MESSAGE,
-                LogClass.throwable,
+                Log.ASSERT,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
+                topLevelThrowable,
             ),
         )
     }
 
     @Test
-    fun test_w3MessageNull() {
-        target.w3MessageNull()
+    fun test_wtf3MessageNull() {
+        wtf3MessageNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
-                Log.WARN,
-                LogClass.TAG,
+                Log.ASSERT,
+                TOP_LEVEL_TAG,
                 null,
-                LogClass.throwable,
+                topLevelThrowable,
             ),
         )
     }
 
     @Test
-    fun test_w3ThrowableNull() {
-        target.w3ThrowableNull()
+    fun test_wtf3ThrowableNull() {
+        wtf3ThrowableNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
-                Log.WARN,
-                LogClass.TAG,
-                LogClass.MESSAGE,
+                Log.ASSERT,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
             ),
         )
     }
 
     @Test
-    fun test_w3TagOnly() {
-        target.w3TagOnly()
+    fun test_wtf3TagOnly() {
+        wtf3TagOnly()
         assertThat(tree.stack).isEmpty()
     }
 
     @Test
-    fun test_w3TagNull() {
-        target.w3TagNull()
+    fun test_wtf3TagNull() {
+        wtf3TagNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
-                Log.WARN,
-                LogClass.TAG,
-                LogClass.MESSAGE,
-                LogClass.throwable,
+                Log.ASSERT,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
+                topLevelThrowable,
             ),
         )
     }
 
     @Test
-    fun test_w3ThrowableOnly() {
-        target.w3ThrowableOnly()
+    fun test_wtf3ThrowableOnly() {
+        wtf3ThrowableOnly()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
-                Log.WARN,
-                LogClass.TAG,
+                Log.ASSERT,
+                TOP_LEVEL_TAG,
                 null,
-                LogClass.throwable,
+                topLevelThrowable,
             ),
         )
     }
 
     @Test
-    fun test_w3MessageOnly() {
-        target.w3MessageOnly()
+    fun test_wtf3MessageOnly() {
+        wtf3MessageOnly()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
-                Log.WARN,
-                LogClass.TAG,
-                LogClass.MESSAGE,
+                Log.ASSERT,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
             ),
         )
     }
 
     @Test
-    fun test_w3Null() {
-        target.w3Null()
+    fun test_wtf3Null() {
+        wtf3Null()
         assertThat(tree.stack).isEmpty()
     }
 }

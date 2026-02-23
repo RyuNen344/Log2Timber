@@ -17,7 +17,7 @@
  * License-Filename: LICENSE
  */
 
-package io.github.ryunen344.log2timber.app.test
+package io.github.ryunen344.log2timber.app.test.top
 
 import android.util.Log
 import assertk.assertThat
@@ -31,16 +31,14 @@ import org.junit.Before
 import org.junit.Test
 import timber.log.Timber
 
-class LogClassErrorTest {
+class LogTopLevelErrorTest {
 
     lateinit var tree: TestingTree
-    lateinit var target: LogClass
 
     @Before
     fun setup() {
         tree = TestingTree()
         Timber.plant(tree)
-        target = LogClass()
     }
 
     @After
@@ -50,125 +48,125 @@ class LogClassErrorTest {
 
     @Test
     fun test_eIsLoggable() {
-        assertThat(target.eIsLoggable())
+        assertThat(eIsLoggable())
             .isTrue()
     }
 
     @Test
     fun test_eIsLoggableTagNull() {
-        assertThat(target.eIsLoggableTagNull())
+        assertThat(eIsLoggableTagNull())
             .isTrue()
     }
 
     @Test
     fun test_e2() {
-        target.e2()
+        e2()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
                 Log.ERROR,
-                LogClass.TAG,
-                LogClass.MESSAGE,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
             ),
         )
     }
 
     @Test
     fun test_e2TagNull() {
-        target.e2TagNull()
+        e2TagNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
                 Log.ERROR,
-                LogClass.TAG,
-                LogClass.MESSAGE,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
             ),
         )
     }
 
     @Test
     fun test_e3() {
-        target.e3()
+        e3()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
                 Log.ERROR,
-                LogClass.TAG,
-                LogClass.MESSAGE,
-                LogClass.throwable,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
+                topLevelThrowable,
             ),
         )
     }
 
     @Test
     fun test_e3MessageNull() {
-        target.e3MessageNull()
+        e3MessageNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
                 Log.ERROR,
-                LogClass.TAG,
+                TOP_LEVEL_TAG,
                 null,
-                LogClass.throwable,
+                topLevelThrowable,
             ),
         )
     }
 
     @Test
     fun test_e3ThrowableNull() {
-        target.e3ThrowableNull()
+        e3ThrowableNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
                 Log.ERROR,
-                LogClass.TAG,
-                LogClass.MESSAGE,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
             ),
         )
     }
 
     @Test
     fun test_e3TagOnly() {
-        target.e3TagOnly()
+        e3TagOnly()
         assertThat(tree.stack).isEmpty()
     }
 
     @Test
     fun test_e3TagNull() {
-        target.e3TagNull()
+        e3TagNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
                 Log.ERROR,
-                LogClass.TAG,
-                LogClass.MESSAGE,
-                LogClass.throwable,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
+                topLevelThrowable,
             ),
         )
     }
 
     @Test
     fun test_e3ThrowableOnly() {
-        target.e3ThrowableOnly()
+        e3ThrowableOnly()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
                 Log.ERROR,
-                LogClass.TAG,
+                TOP_LEVEL_TAG,
                 null,
-                LogClass.throwable,
+                topLevelThrowable,
             ),
         )
     }
 
     @Test
     fun test_e3MessageOnly() {
-        target.e3MessageOnly()
+        e3MessageOnly()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
                 Log.ERROR,
-                LogClass.TAG,
-                LogClass.MESSAGE,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
             ),
         )
     }
 
     @Test
     fun test_e3Null() {
-        target.e3Null()
+        e3Null()
         assertThat(tree.stack).isEmpty()
     }
 }

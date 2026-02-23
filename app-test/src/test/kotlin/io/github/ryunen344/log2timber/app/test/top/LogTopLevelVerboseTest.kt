@@ -17,7 +17,7 @@
  * License-Filename: LICENSE
  */
 
-package io.github.ryunen344.log2timber.app.test
+package io.github.ryunen344.log2timber.app.test.top
 
 import android.util.Log
 import assertk.assertThat
@@ -31,16 +31,14 @@ import org.junit.Before
 import org.junit.Test
 import timber.log.Timber
 
-class LogClassVerboseTest {
+class LogTopLevelVerboseTest {
 
     lateinit var tree: TestingTree
-    lateinit var target: LogClass
 
     @Before
     fun setup() {
         tree = TestingTree()
         Timber.plant(tree)
-        target = LogClass()
     }
 
     @After
@@ -50,125 +48,125 @@ class LogClassVerboseTest {
 
     @Test
     fun test_vIsLoggable() {
-        assertThat(target.vIsLoggable())
+        assertThat(vIsLoggable())
             .isTrue()
     }
 
     @Test
     fun test_vIsLoggableTagNull() {
-        assertThat(target.vIsLoggableTagNull())
+        assertThat(vIsLoggableTagNull())
             .isTrue()
     }
 
     @Test
     fun test_v2() {
-        target.v2()
+        v2()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
                 Log.VERBOSE,
-                LogClass.TAG,
-                LogClass.MESSAGE,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
             ),
         )
     }
 
     @Test
     fun test_v2TagNull() {
-        target.v2TagNull()
+        v2TagNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
                 Log.VERBOSE,
-                LogClass.TAG,
-                LogClass.MESSAGE,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
             ),
         )
     }
 
     @Test
     fun test_v3() {
-        target.v3()
+        v3()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
                 Log.VERBOSE,
-                LogClass.TAG,
-                LogClass.MESSAGE,
-                LogClass.throwable,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
+                topLevelThrowable,
             ),
         )
     }
 
     @Test
     fun test_v3MessageNull() {
-        target.v3MessageNull()
+        v3MessageNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
                 Log.VERBOSE,
-                LogClass.TAG,
+                TOP_LEVEL_TAG,
                 null,
-                LogClass.throwable,
+                topLevelThrowable,
             ),
         )
     }
 
     @Test
     fun test_v3ThrowableNull() {
-        target.v3ThrowableNull()
+        v3ThrowableNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
                 Log.VERBOSE,
-                LogClass.TAG,
-                LogClass.MESSAGE,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
             ),
         )
     }
 
     @Test
     fun test_v3TagOnly() {
-        target.v3TagOnly()
+        v3TagOnly()
         assertThat(tree.stack).isEmpty()
     }
 
     @Test
     fun test_v3TagNull() {
-        target.v3TagNull()
+        v3TagNull()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
                 Log.VERBOSE,
-                LogClass.TAG,
-                LogClass.MESSAGE,
-                LogClass.throwable,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
+                topLevelThrowable,
             ),
         )
     }
 
     @Test
     fun test_v3ThrowableOnly() {
-        target.v3ThrowableOnly()
+        v3ThrowableOnly()
         assertThat(tree.stack).containsOnly(
             TimberRecord.exception(
                 Log.VERBOSE,
-                LogClass.TAG,
+                TOP_LEVEL_TAG,
                 null,
-                LogClass.throwable,
+                topLevelThrowable,
             ),
         )
     }
 
     @Test
     fun test_v3MessageOnly() {
-        target.v3MessageOnly()
+        v3MessageOnly()
         assertThat(tree.stack).containsOnly(
             TimberRecord(
                 Log.VERBOSE,
-                LogClass.TAG,
-                LogClass.MESSAGE,
+                TOP_LEVEL_TAG,
+                TOP_LEVEL_MESSAGE,
             ),
         )
     }
 
     @Test
     fun test_v3Null() {
-        target.v3Null()
+        v3Null()
         assertThat(tree.stack).isEmpty()
     }
 }
