@@ -27,11 +27,11 @@ class LogClass {
 
     // region: verbose
     fun vIsLoggable(): Boolean {
-        return Log.isLoggable(TAG, Log.INFO)
+        return Log.isLoggable(TAG, Log.VERBOSE)
     }
 
     fun vIsLoggableTagNull(): Boolean {
-        return Log.isLoggable(null, Log.INFO)
+        return Log.isLoggable(null, Log.VERBOSE)
     }
 
     fun v2() {
