@@ -26,6 +26,14 @@ import android.util.Log
 class LogClass {
 
     // region: verbose
+    fun vIsLoggable(): Boolean {
+        return Log.isLoggable(TAG, Log.VERBOSE)
+    }
+
+    fun vIsLoggableTagNull(): Boolean {
+        return Log.isLoggable(null, Log.VERBOSE)
+    }
+
     fun v2() {
         Log.v(TAG, MESSAGE)
     }
@@ -68,6 +76,14 @@ class LogClass {
     // endregion
 
     // region: debug
+    fun dIsLoggable(): Boolean {
+        return Log.isLoggable(TAG, Log.DEBUG)
+    }
+
+    fun dIsLoggableTagNull(): Boolean {
+        return Log.isLoggable(null, Log.DEBUG)
+    }
+
     fun d2() {
         Log.d(TAG, MESSAGE)
     }
@@ -110,6 +126,14 @@ class LogClass {
     // endregion
 
     // region: info
+    fun iIsLoggable(): Boolean {
+        return Log.isLoggable(TAG, Log.INFO)
+    }
+
+    fun iIsLoggableTagNull(): Boolean {
+        return Log.isLoggable(null, Log.INFO)
+    }
+
     fun i2() {
         Log.i(TAG, MESSAGE)
     }
@@ -152,6 +176,14 @@ class LogClass {
     // endregion
 
     // region: warn
+    fun wIsLoggable(): Boolean {
+        return Log.isLoggable(TAG, Log.WARN)
+    }
+
+    fun wIsLoggableTagNull(): Boolean {
+        return Log.isLoggable(null, Log.WARN)
+    }
+
     fun w2() {
         Log.w(TAG, MESSAGE)
     }
@@ -206,6 +238,14 @@ class LogClass {
     // endregion
 
     // region: error
+    fun eIsLoggable(): Boolean {
+        return Log.isLoggable(TAG, Log.ERROR)
+    }
+
+    fun eIsLoggableTagNull(): Boolean {
+        return Log.isLoggable(null, Log.ERROR)
+    }
+
     fun e2() {
         Log.e(TAG, MESSAGE)
     }
@@ -248,6 +288,14 @@ class LogClass {
     // endregion
 
     // region: wtf
+    fun wtfIsLoggable(): Boolean {
+        return Log.isLoggable(TAG, Log.ASSERT)
+    }
+
+    fun wtfIsLoggableTagNull(): Boolean {
+        return Log.isLoggable(null, Log.ASSERT)
+    }
+
     fun wtf2() {
         Log.wtf(TAG, MESSAGE)
     }

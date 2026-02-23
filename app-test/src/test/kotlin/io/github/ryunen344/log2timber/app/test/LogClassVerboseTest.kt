@@ -23,6 +23,7 @@ import android.util.Log
 import assertk.assertThat
 import assertk.assertions.containsOnly
 import assertk.assertions.isEmpty
+import assertk.assertions.isTrue
 import io.github.ryunen344.log2timber.app.test.timber.TestingTree
 import io.github.ryunen344.log2timber.app.test.timber.TimberRecord
 import org.junit.After
@@ -45,6 +46,18 @@ class LogClassVerboseTest {
     @After
     fun cleanup() {
         Timber.uproot(tree)
+    }
+
+    @Test
+    fun test_vIsLoggable() {
+        assertThat(target.vIsLoggable())
+            .isTrue()
+    }
+
+    @Test
+    fun test_vIsLoggableTagNull() {
+        assertThat(target.vIsLoggableTagNull())
+            .isTrue()
     }
 
     @Test
