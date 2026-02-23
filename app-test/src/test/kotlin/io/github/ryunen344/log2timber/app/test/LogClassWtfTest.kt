@@ -23,6 +23,7 @@ import android.util.Log
 import assertk.assertThat
 import assertk.assertions.containsOnly
 import assertk.assertions.isEmpty
+import assertk.assertions.isTrue
 import io.github.ryunen344.log2timber.app.test.timber.TestingTree
 import io.github.ryunen344.log2timber.app.test.timber.TimberRecord
 import org.junit.After
@@ -45,6 +46,18 @@ class LogClassWtfTest {
     @After
     fun cleanup() {
         Timber.uproot(tree)
+    }
+
+    @Test
+    fun test_wtfIsLoggable() {
+        assertThat(target.wtfIsLoggable())
+            .isTrue()
+    }
+
+    @Test
+    fun test_wtfIsLoggableTagNull() {
+        assertThat(target.wtfIsLoggableTagNull())
+            .isTrue()
     }
 
     @Test
