@@ -1,7 +1,5 @@
-@file:SuppressLint("LogNotTimber")
-
 /*
- * Copyright (C) 2026-2026 RyuNen344
+ * Copyright (C) 2026 RyuNen344
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +16,8 @@
  * SPDX-License-Identifier: Apache-2.0
  * License-Filename: LICENSE
  */
+
+@file:SuppressLint("LogNotTimber")
 
 package io.github.ryunen344.log2timber.app.test.top
 
