@@ -20,10 +20,14 @@ abstract class SdkmanValueSource implements ValueSource<JavaLanguageVersion, Par
             throw new GradleException("Could not find .sdkmanrc file at ${file}.")
         }
         file.withInputStream { prop.load(it) }
-        Matcher matcher = Pattern.compile("^(\\d+)\\.(\\d+)\\.(\\d+)-([A-Za-z0-9._-]+)\$").matcher(prop.getProperty("java"))
+        String javaVersion = prop.getProperty("java")
+        if (javaVersion == null || javaVersion.trim().isEmpty()) {
+            throw new GradleException("Could not find 'java' entry in .sdkmanrc file: ${file}.")
+        }
+        Matcher matcher = Pattern.compile("^(\\d+)\\.(\\d+)\\.(\\d+)-([A-Za-z0-9._-]+)\$").matcher(javaVersion)
         String major = matcher.matches() ? matcher.group(1) : null
         if (major == null) {
-            throw new GradleException("Could not parse Java version from .sdkmanrc file: ${prop.getProperty("java")}")
+            throw new GradleException("Could not parse Java version from .sdkmanrc file: ${javaVersion}")
         }
         return JavaLanguageVersion.of(major)
     }
