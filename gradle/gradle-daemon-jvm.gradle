@@ -17,7 +17,7 @@ abstract class SdkmanValueSource implements ValueSource<JavaLanguageVersion, Par
         Properties prop = new Properties()
         def file = parameters.getFile().asFile.getOrNull()
         if (file == null || !file.exists()) {
-            throw new GradleException("Could not find .sdkmanrc file at ${parameters.file.get().asFile}.")
+            throw new GradleException("Could not find .sdkmanrc file at ${file}.")
         }
         file.withInputStream { prop.load(it) }
         Matcher matcher = Pattern.compile("^(\\d+)\\.(\\d+)\\.(\\d+)-([A-Za-z0-9._-]+)\$").matcher(prop.getProperty("java"))
