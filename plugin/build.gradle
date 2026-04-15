@@ -11,15 +11,13 @@ plugins {
 
 apply from: layout.settingsDirectory.dir("gradle").file("publish.gradle")
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(libs.versions.jdk.get()))
-    }
-}
-
 kotlin {
     explicitApi()
-    compilerOptions.jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
+    compilerOptions.jvmTarget = libs.versions.jdk.map { JvmTarget.fromTarget(it) }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release.set(libs.versions.jdk.map { it.toInteger() })
 }
 
 test {
