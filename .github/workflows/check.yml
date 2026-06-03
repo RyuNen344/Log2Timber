@@ -100,7 +100,7 @@ jobs:
           path: '**/test-results/**/*.xml'
           reporter: java-junit
           fail-on-error: false
-      - uses: madrapps/jacoco-report@v1.7.2
+      - uses: madrapps/jacoco-report@v1.8.0
         if: ${{ !cancelled() }}
         with:
           paths: |
