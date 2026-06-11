@@ -63,7 +63,6 @@ public class Log2TimberPlugin : Plugin<Project> {
                     }
                 }
 
-                // FIXME implement test
                 val variantExtension = variant.getExtension(Log2TimberVariantDslExtension::class.java)
                 val projectExtension = (common as ExtensionAware).extensions.getByType(Log2TimberDslExtension::class.java)
                 val enabled = variantExtension?.enabled?.takeIf(Property<Boolean>::isPresent) ?: projectExtension.enabled.convention(true)
