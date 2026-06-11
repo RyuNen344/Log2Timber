@@ -20,7 +20,7 @@
 pluginManagement {
     includeBuild("..")
     repositories {
-        // maven { url layout.settingsDirectory.dir("..").dir("releases").dir("maven") }
+        // maven { setUrl(layout.settingsDirectory.dir("..").dir("releases").dir("maven")) }
         mavenCentral()
         google()
         gradlePluginPortal()
@@ -39,4 +39,4 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "kts-sample"
+rootProject.name = "app-kts"
