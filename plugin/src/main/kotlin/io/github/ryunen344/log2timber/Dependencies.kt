@@ -17,26 +17,16 @@
  * License-Filename: LICENSE
  */
 
-pluginManagement {
-    includeBuild("..")
-    repositories {
-        // maven { setUrl(layout.settingsDirectory.dir("..").dir("releases").dir("maven")) }
-        mavenCentral()
-        google()
-        gradlePluginPortal()
-    }
-}
+package io.github.ryunen344.log2timber
 
-dependencyResolutionManagement {
-    versionCatalogs {
-        create("libs") {
-            from(files("../gradle/libs.versions.toml"))
-        }
-    }
-    repositories {
-        mavenCentral()
-        google()
-    }
-}
+import org.gradle.api.artifacts.component.ComponentIdentifier
+import org.gradle.api.artifacts.component.ModuleComponentIdentifier
+import org.gradle.api.artifacts.result.ResolutionResult
 
-rootProject.name = "app-kts"
+internal fun ResolutionResult.isTimberMissing(): Boolean =
+    allComponents.none { it.id.isTimber() }
+
+internal fun ComponentIdentifier.isTimber(): Boolean =
+    this is ModuleComponentIdentifier &&
+        group == Log2TimberPlugin.TIMBER_GROUP &&
+        module == Log2TimberPlugin.TIMBER_MODULE

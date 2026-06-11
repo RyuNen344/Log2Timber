@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,26 +17,16 @@
  * License-Filename: LICENSE
  */
 
-pluginManagement {
-    includeBuild("..")
-    repositories {
-        // maven { setUrl(layout.settingsDirectory.dir("..").dir("releases").dir("maven")) }
-        mavenCentral()
-        google()
-        gradlePluginPortal()
+package io.github.ryunen344.log2timber.sample;
+
+import android.util.Log;
+
+public final class LogIsLoggable {
+
+    private LogIsLoggable() {
+    }
+
+    public static boolean check(String tag, int level) {
+        return Log.isLoggable(tag, level);
     }
 }
-
-dependencyResolutionManagement {
-    versionCatalogs {
-        create("libs") {
-            from(files("../gradle/libs.versions.toml"))
-        }
-    }
-    repositories {
-        mavenCentral()
-        google()
-    }
-}
-
-rootProject.name = "app-kts"

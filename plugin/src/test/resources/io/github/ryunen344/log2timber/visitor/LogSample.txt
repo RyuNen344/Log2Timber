@@ -1,0 +1,181 @@
+// class version 61.0 (61)
+// access flags 0x31
+public final class io/github/ryunen344/log2timber/sample/LogSample {
+
+  // compiled from: LogSample.java
+
+  // access flags 0x2
+  private <init>()V
+   L0
+    LINENUMBER 26 L0
+    ALOAD 0
+    INVOKESPECIAL java/lang/Object.<init> ()V
+   L1
+    LINENUMBER 27 L1
+    RETURN
+   L2
+    LOCALVARIABLE this Lio/github/ryunen344/log2timber/sample/LogSample; L0 L2 0
+    MAXSTACK = 1
+    MAXLOCALS = 1
+
+  // access flags 0x9
+  public static message(Ljava/lang/String;Ljava/lang/String;)V
+   L0
+    LINENUMBER 30 L0
+    ALOAD 0
+    ALOAD 1
+    SWAP
+    DUP
+    IFNULL L1
+    INVOKESTATIC timber/log/Timber.tag (Ljava/lang/String;)Ltimber/log/Timber$Tree;
+    SWAP
+    ICONST_0
+    ANEWARRAY java/lang/Object
+    INVOKEVIRTUAL timber/log/Timber$Tree.d (Ljava/lang/String;[Ljava/lang/Object;)V
+    GOTO L2
+   L1
+    POP
+    ICONST_0
+    ANEWARRAY java/lang/Object
+    INVOKESTATIC timber/log/Timber.d (Ljava/lang/String;[Ljava/lang/Object;)V
+   L2
+    ICONST_0
+    POP
+   L3
+    LINENUMBER 31 L3
+    RETURN
+   L4
+    LOCALVARIABLE tag Ljava/lang/String; L0 L4 0
+    LOCALVARIABLE msg Ljava/lang/String; L0 L4 1
+    MAXSTACK = 2
+    MAXLOCALS = 2
+
+  // access flags 0x9
+  public static messageThrowable(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+   L0
+    LINENUMBER 34 L0
+    ALOAD 0
+    ALOAD 1
+    ALOAD 2
+    DUP2_X1
+    POP2
+    DUP
+    IFNULL L1
+    INVOKESTATIC timber/log/Timber.tag (Ljava/lang/String;)Ltimber/log/Timber$Tree;
+    DUP_X2
+    POP
+    SWAP
+    ICONST_0
+    ANEWARRAY java/lang/Object
+    INVOKEVIRTUAL timber/log/Timber$Tree.e (Ljava/lang/Throwable;Ljava/lang/String;[Ljava/lang/Object;)V
+    GOTO L2
+   L1
+    POP
+    SWAP
+    ICONST_0
+    ANEWARRAY java/lang/Object
+    INVOKESTATIC timber/log/Timber.e (Ljava/lang/Throwable;Ljava/lang/String;[Ljava/lang/Object;)V
+   L2
+    ICONST_0
+    POP
+   L3
+    LINENUMBER 35 L3
+    RETURN
+   L4
+    LOCALVARIABLE tag Ljava/lang/String; L0 L4 0
+    LOCALVARIABLE msg Ljava/lang/String; L0 L4 1
+    LOCALVARIABLE tr Ljava/lang/Throwable; L0 L4 2
+    MAXSTACK = 3
+    MAXLOCALS = 3
+
+  // access flags 0x9
+  public static throwableWarn(Ljava/lang/String;Ljava/lang/Throwable;)V
+   L0
+    LINENUMBER 38 L0
+    ALOAD 0
+    ALOAD 1
+    SWAP
+    DUP
+    IFNULL L1
+    INVOKESTATIC timber/log/Timber.tag (Ljava/lang/String;)Ltimber/log/Timber$Tree;
+    SWAP
+    INVOKEVIRTUAL timber/log/Timber$Tree.w (Ljava/lang/Throwable;)V
+    GOTO L2
+   L1
+    POP
+    INVOKESTATIC timber/log/Timber.w (Ljava/lang/Throwable;)V
+   L2
+    ICONST_0
+    POP
+   L3
+    LINENUMBER 39 L3
+    RETURN
+   L4
+    LOCALVARIABLE tag Ljava/lang/String; L0 L4 0
+    LOCALVARIABLE tr Ljava/lang/Throwable; L0 L4 1
+    MAXSTACK = 2
+    MAXLOCALS = 2
+
+  // access flags 0x9
+  public static throwableWtf(Ljava/lang/String;Ljava/lang/Throwable;)V
+   L0
+    LINENUMBER 42 L0
+    ALOAD 0
+    ALOAD 1
+    SWAP
+    DUP
+    IFNULL L1
+    INVOKESTATIC timber/log/Timber.tag (Ljava/lang/String;)Ltimber/log/Timber$Tree;
+    SWAP
+    INVOKEVIRTUAL timber/log/Timber$Tree.wtf (Ljava/lang/Throwable;)V
+    GOTO L2
+   L1
+    POP
+    INVOKESTATIC timber/log/Timber.wtf (Ljava/lang/Throwable;)V
+   L2
+    ICONST_0
+    POP
+   L3
+    LINENUMBER 43 L3
+    RETURN
+   L4
+    LOCALVARIABLE tag Ljava/lang/String; L0 L4 0
+    LOCALVARIABLE tr Ljava/lang/Throwable; L0 L4 1
+    MAXSTACK = 2
+    MAXLOCALS = 2
+
+  // access flags 0x9
+  public static print(ILjava/lang/String;Ljava/lang/String;)V
+   L0
+    LINENUMBER 46 L0
+    ILOAD 0
+    ALOAD 1
+    ALOAD 2
+    SWAP
+    DUP
+    IFNULL L1
+    INVOKESTATIC timber/log/Timber.tag (Ljava/lang/String;)Ltimber/log/Timber$Tree;
+    DUP_X2
+    POP
+    ICONST_0
+    ANEWARRAY java/lang/Object
+    INVOKEVIRTUAL timber/log/Timber$Tree.log (ILjava/lang/String;[Ljava/lang/Object;)V
+    GOTO L2
+   L1
+    POP
+    ICONST_0
+    ANEWARRAY java/lang/Object
+    INVOKESTATIC timber/log/Timber.log (ILjava/lang/String;[Ljava/lang/Object;)V
+   L2
+    ICONST_0
+    POP
+   L3
+    LINENUMBER 47 L3
+    RETURN
+   L4
+    LOCALVARIABLE priority I L0 L4 0
+    LOCALVARIABLE tag Ljava/lang/String; L0 L4 1
+    LOCALVARIABLE msg Ljava/lang/String; L0 L4 2
+    MAXSTACK = 3
+    MAXLOCALS = 3
+}

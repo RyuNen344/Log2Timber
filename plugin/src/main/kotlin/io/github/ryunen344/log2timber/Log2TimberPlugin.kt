@@ -29,7 +29,6 @@ import io.github.ryunen344.log2timber.visitor.Log2TimberVisitorFactory
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
-import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.provider.Property
@@ -57,20 +56,13 @@ public class Log2TimberPlugin : Plugin<Project> {
             androidComponents.onVariants { variant ->
                 variant.runtimeConfiguration.incoming.afterResolve {
                     if (variant.runtimeConfiguration.state == Configuration.State.RESOLVED) {
-                        val missing = it.resolutionResult.allComponents
-                            .none { result ->
-                                val id = result.id
-                                id is ModuleComponentIdentifier && id.group == TIMBER_GROUP && id.module == TIMBER_MODULE
-                            }
-
-                        if (missing) {
+                        if (it.resolutionResult.isTimberMissing()) {
                             target.logger.error("Log2Timber: No dependencies found in runtime configuration for variant '${variant.name}'")
                             target.logger.error("Log2Timber: Log2Timber may occur runtime crash if Timber is not included as a dependency.")
                         }
                     }
                 }
 
-                // FIXME implement test
                 val variantExtension = variant.getExtension(Log2TimberVariantDslExtension::class.java)
                 val projectExtension = (common as ExtensionAware).extensions.getByType(Log2TimberDslExtension::class.java)
                 val enabled = variantExtension?.enabled?.takeIf(Property<Boolean>::isPresent) ?: projectExtension.enabled.convention(true)
