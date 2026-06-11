@@ -7,11 +7,11 @@ public final class io/github/ryunen344/log2timber/sample/LogSample {
   // access flags 0x2
   private <init>()V
    L0
-    LINENUMBER 30 L0
+    LINENUMBER 26 L0
     ALOAD 0
     INVOKESPECIAL java/lang/Object.<init> ()V
    L1
-    LINENUMBER 31 L1
+    LINENUMBER 27 L1
     RETURN
    L2
     LOCALVARIABLE this Lio/github/ryunen344/log2timber/sample/LogSample; L0 L2 0
@@ -21,7 +21,7 @@ public final class io/github/ryunen344/log2timber/sample/LogSample {
   // access flags 0x9
   public static message(Ljava/lang/String;Ljava/lang/String;)V
    L0
-    LINENUMBER 34 L0
+    LINENUMBER 30 L0
     ALOAD 0
     ALOAD 1
     SWAP
@@ -42,7 +42,7 @@ public final class io/github/ryunen344/log2timber/sample/LogSample {
     ICONST_0
     POP
    L3
-    LINENUMBER 35 L3
+    LINENUMBER 31 L3
     RETURN
    L4
     LOCALVARIABLE tag Ljava/lang/String; L0 L4 0
@@ -53,7 +53,7 @@ public final class io/github/ryunen344/log2timber/sample/LogSample {
   // access flags 0x9
   public static messageThrowable(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
    L0
-    LINENUMBER 38 L0
+    LINENUMBER 34 L0
     ALOAD 0
     ALOAD 1
     ALOAD 2
@@ -79,7 +79,7 @@ public final class io/github/ryunen344/log2timber/sample/LogSample {
     ICONST_0
     POP
    L3
-    LINENUMBER 39 L3
+    LINENUMBER 35 L3
     RETURN
    L4
     LOCALVARIABLE tag Ljava/lang/String; L0 L4 0
@@ -91,7 +91,7 @@ public final class io/github/ryunen344/log2timber/sample/LogSample {
   // access flags 0x9
   public static throwableWarn(Ljava/lang/String;Ljava/lang/Throwable;)V
    L0
-    LINENUMBER 42 L0
+    LINENUMBER 38 L0
     ALOAD 0
     ALOAD 1
     SWAP
@@ -108,7 +108,7 @@ public final class io/github/ryunen344/log2timber/sample/LogSample {
     ICONST_0
     POP
    L3
-    LINENUMBER 43 L3
+    LINENUMBER 39 L3
     RETURN
    L4
     LOCALVARIABLE tag Ljava/lang/String; L0 L4 0
@@ -119,7 +119,7 @@ public final class io/github/ryunen344/log2timber/sample/LogSample {
   // access flags 0x9
   public static throwableWtf(Ljava/lang/String;Ljava/lang/Throwable;)V
    L0
-    LINENUMBER 46 L0
+    LINENUMBER 42 L0
     ALOAD 0
     ALOAD 1
     SWAP
@@ -136,7 +136,7 @@ public final class io/github/ryunen344/log2timber/sample/LogSample {
     ICONST_0
     POP
    L3
-    LINENUMBER 47 L3
+    LINENUMBER 43 L3
     RETURN
    L4
     LOCALVARIABLE tag Ljava/lang/String; L0 L4 0
@@ -147,7 +147,7 @@ public final class io/github/ryunen344/log2timber/sample/LogSample {
   // access flags 0x9
   public static print(ILjava/lang/String;Ljava/lang/String;)V
    L0
-    LINENUMBER 50 L0
+    LINENUMBER 46 L0
     ILOAD 0
     ALOAD 1
     ALOAD 2
@@ -170,7 +170,7 @@ public final class io/github/ryunen344/log2timber/sample/LogSample {
     ICONST_0
     POP
    L3
-    LINENUMBER 51 L3
+    LINENUMBER 47 L3
     RETURN
    L4
     LOCALVARIABLE priority I L0 L4 0

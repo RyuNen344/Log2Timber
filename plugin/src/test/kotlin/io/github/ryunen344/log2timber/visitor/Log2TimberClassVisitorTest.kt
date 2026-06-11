@@ -24,6 +24,7 @@ import assertk.assertions.isEqualTo
 import org.junit.jupiter.api.Test
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.Opcodes
+import org.objectweb.asm.util.CheckClassAdapter
 import org.objectweb.asm.util.TraceClassVisitor
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -53,9 +54,9 @@ class Log2TimberClassVisitorTest {
             "missing compiled class: $internalName"
         }.use { it.readBytes() }
         val writer = StringWriter()
-        val trace = TraceClassVisitor(null, PrintWriter(writer))
+        val check = CheckClassAdapter(TraceClassVisitor(null, PrintWriter(writer)), false)
         ClassReader(bytes).accept(
-            Log2TimberClassVisitor(Opcodes.ASM9, trace, forcePlant, null),
+            Log2TimberClassVisitor(Opcodes.ASM9, check, forcePlant, null),
             ClassReader.SKIP_FRAMES,
         )
         return writer.toString()

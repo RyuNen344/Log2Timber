@@ -7,11 +7,11 @@ public final class io/github/ryunen344/log2timber/sample/LogIsLoggable {
   // access flags 0x2
   private <init>()V
    L0
-    LINENUMBER 29 L0
+    LINENUMBER 26 L0
     ALOAD 0
     INVOKESPECIAL java/lang/Object.<init> ()V
    L1
-    LINENUMBER 30 L1
+    LINENUMBER 27 L1
     RETURN
    L2
     LOCALVARIABLE this Lio/github/ryunen344/log2timber/sample/LogIsLoggable; L0 L2 0
@@ -21,7 +21,7 @@ public final class io/github/ryunen344/log2timber/sample/LogIsLoggable {
   // access flags 0x9
   public static check(Ljava/lang/String;I)Z
    L0
-    LINENUMBER 33 L0
+    LINENUMBER 30 L0
     ALOAD 0
     ILOAD 1
     INVOKESTATIC android/util/Log.isLoggable (Ljava/lang/String;I)Z
