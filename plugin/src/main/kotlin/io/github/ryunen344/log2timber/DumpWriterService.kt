@@ -22,9 +22,8 @@ package io.github.ryunen344.log2timber
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.services.BuildService
 import org.gradle.api.services.BuildServiceParameters
-import org.gradle.api.tasks.InputFile
-import org.gradle.api.tasks.PathSensitive
-import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.Optional
+import org.gradle.api.tasks.OutputFile
 import java.io.PrintWriter
 import java.lang.AutoCloseable
 import javax.inject.Inject
@@ -44,8 +43,8 @@ public abstract class DumpWriterService @Inject constructor() : BuildService<Dum
     }
 
     public interface Params : BuildServiceParameters {
-        @get:InputFile
-        @get:PathSensitive(PathSensitivity.RELATIVE)
+        @get:OutputFile
+        @get:Optional
         public val dump: RegularFileProperty
     }
 }
