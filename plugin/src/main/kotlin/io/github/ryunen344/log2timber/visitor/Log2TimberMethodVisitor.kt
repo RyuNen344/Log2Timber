@@ -50,12 +50,12 @@ public class Log2TimberMethodVisitor(
         isInterface: Boolean,
     ) {
         if (owner == "android/util/Log") {
-            onTransform(opcode, owner, name, descriptor, isInterface)
             when (name) {
                 "d", "i", "w", "e", "v", "wtf" -> {
                     when (descriptor) {
                         // Log.{v,d,i,w,e,wtf}(@Nullable tag: String, @NonNull message: String): Int
                         "(Ljava/lang/String;Ljava/lang/String;)I" -> {
+                            onTransform(opcode, owner, name, descriptor, isInterface)
                             val nullLabel = Label()
                             val endLabel = Label()
 
@@ -126,6 +126,7 @@ public class Log2TimberMethodVisitor(
 
                         // Log.{w,wtf}(@Nullable tag: String, @Nullable throwable: Throwable): Int
                         "(Ljava/lang/String;Ljava/lang/Throwable;)I" -> {
+                            onTransform(opcode, owner, name, descriptor, isInterface)
                             val nullLabel = Label()
                             val endLabel = Label()
 
@@ -186,6 +187,7 @@ public class Log2TimberMethodVisitor(
 
                         // Log.{v,d,i,w,e,wtf}(@Nullable tag: String, @Nullable message: String, @Nullable throwable: Throwable): Int
                         "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I" -> {
+                            onTransform(opcode, owner, name, descriptor, isInterface)
                             val nullLabel = Label()
                             val endLabel = Label()
 
@@ -274,6 +276,8 @@ public class Log2TimberMethodVisitor(
                 // isLoggable(Ljava/lang/String;I)Z
                 "isLoggable" -> {
                     if (forcePlant) {
+                        onTransform(opcode, owner, name, descriptor, isInterface)
+
                         // stack: [tag, level] -> []
                         super.visitInsn(Opcodes.POP2)
 
@@ -287,6 +291,7 @@ public class Log2TimberMethodVisitor(
                 // Log.println(priority: Int, @Nullable tag: String, @NonNull message: String): Int
                 // println(ILjava/lang/String;Ljava/lang/String;)I
                 "println" -> {
+                    onTransform(opcode, owner, name, descriptor, isInterface)
                     val nullLabel = Label()
                     val endLabel = Label()
 
