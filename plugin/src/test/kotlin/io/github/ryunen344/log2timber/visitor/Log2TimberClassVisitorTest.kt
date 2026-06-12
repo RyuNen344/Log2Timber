@@ -20,12 +20,17 @@
 package io.github.ryunen344.log2timber.visitor
 
 import assertk.assertThat
+import assertk.assertions.contains
+import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
+import assertk.assertions.isNotEmpty
 import org.junit.jupiter.api.Test
 import org.objectweb.asm.ClassReader
+import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.util.CheckClassAdapter
 import org.objectweb.asm.util.TraceClassVisitor
+import java.io.InputStream
 import java.io.PrintWriter
 import java.io.StringWriter
 
@@ -49,23 +54,46 @@ class Log2TimberClassVisitorTest {
         assertMatchesFixture("$VISITOR_RESOURCES/LogIsLoggable-passthrough.txt", actual)
     }
 
+    @Test
+    fun testDump_givenPassthroughOnly_thenEmpty() {
+        val actual = dump(IS_LOGGABLE)
+        assertThat(actual).isEmpty()
+    }
+
+    @Test
+    fun testDump_givenTransformed_thenRecordsOriginalCall() {
+        val actual = dump(SAMPLE)
+        assertThat(actual).isNotEmpty()
+        assertThat(actual).contains("android/util/Log")
+    }
+
     private fun transform(internalName: String, forcePlant: Boolean): String {
-        val bytes = checkNotNull(javaClass.classLoader.getResourceAsStream("$internalName.class")) {
-            "missing compiled class: $internalName"
-        }.use { it.readBytes() }
         val writer = StringWriter()
         val check = CheckClassAdapter(TraceClassVisitor(null, PrintWriter(writer)), false)
-        ClassReader(bytes).accept(
+        ClassReader(readClass(internalName)).accept(
             Log2TimberClassVisitor(Opcodes.ASM9, check, forcePlant, null),
             ClassReader.SKIP_FRAMES,
         )
         return writer.toString()
     }
 
+    private fun dump(internalName: String): String {
+        val writer = StringWriter()
+        ClassReader(readClass(internalName)).accept(
+            Log2TimberClassVisitor(Opcodes.ASM9, ClassWriter(0), false, PrintWriter(writer)),
+            ClassReader.SKIP_FRAMES,
+        )
+        return writer.toString()
+    }
+
+    private fun readClass(internalName: String): ByteArray {
+        return requireNotNull(javaClass.classLoader.getResourceAsStream("$internalName.class"))
+            .use(InputStream::readBytes)
+    }
+
     private fun assertMatchesFixture(resourcePath: String, actual: String) {
-        val expected = checkNotNull(javaClass.classLoader.getResourceAsStream(resourcePath)) {
-            "missing fixture: $resourcePath"
-        }.use { it.reader().readText() }
+        val expected = requireNotNull(javaClass.classLoader.getResourceAsStream(resourcePath))
+            .use { it.reader().readText() }
         assertThat(actual).isEqualTo(expected)
     }
 
