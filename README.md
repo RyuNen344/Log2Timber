@@ -42,8 +42,7 @@ line of source code.
 - `com.android.application` module (library modules are skipped with a warning)
 - `com.jakewharton.timber:timber` on the runtime classpath
 
-For each instrumented variant the plugin registers a `verify<Variant>TimberDependency` pre-build
-task
+For each instrumented variant the plugin registers a `verify<Variant>TimberDependency` pre-build task
 that warns when Timber is missing from the variant runtime classpath.
 
 ## Installation
