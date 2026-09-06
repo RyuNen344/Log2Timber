@@ -36,6 +36,14 @@ public abstract class io/github/ryunen344/log2timber/Log2TimberVariantDslExtensi
 	public abstract fun getForcePlant ()Lorg/gradle/api/provider/Property;
 }
 
+public abstract class io/github/ryunen344/log2timber/VerifyTimberDependencyTask : org/gradle/api/DefaultTask {
+	public fun <init> ()V
+	public abstract fun getInstrumentationEnabled ()Lorg/gradle/api/provider/Property;
+	public abstract fun getTimberMissing ()Lorg/gradle/api/provider/Property;
+	public abstract fun getVariantName ()Lorg/gradle/api/provider/Property;
+	public final fun verify ()V
+}
+
 public final class io/github/ryunen344/log2timber/dsl/ExtensionKt {
 	public static final fun log2timber (Lcom/android/build/api/dsl/ApplicationBuildType;Lorg/gradle/api/Action;)V
 	public static final fun log2timber (Lcom/android/build/api/dsl/ApplicationProductFlavor;Lorg/gradle/api/Action;)V
@@ -61,6 +69,7 @@ public abstract class io/github/ryunen344/log2timber/visitor/Log2TimberVisitorFa
 }
 
 public abstract interface class io/github/ryunen344/log2timber/visitor/Log2TimberVisitorFactory$Parameter : com/android/build/api/instrumentation/InstrumentationParameters {
+	public abstract fun getEnabled ()Lorg/gradle/api/provider/Property;
 	public abstract fun getForcePlant ()Lorg/gradle/api/provider/Property;
 	public abstract fun getService ()Lorg/gradle/api/provider/Property;
 }

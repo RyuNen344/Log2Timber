@@ -28,7 +28,7 @@ import com.android.build.gradle.AppPlugin
 import io.github.ryunen344.log2timber.visitor.Log2TimberVisitorFactory
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.Configuration
+import org.gradle.api.artifacts.result.ResolvedComponentResult
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.provider.Property
@@ -54,42 +54,48 @@ public class Log2TimberPlugin : Plugin<Project> {
             }
             val common = target.extensions.getByType(CommonExtension::class.java)
             androidComponents.onVariants { variant ->
-                variant.runtimeConfiguration.incoming.afterResolve {
-                    if (variant.runtimeConfiguration.state == Configuration.State.RESOLVED) {
-                        if (it.resolutionResult.isTimberMissing()) {
-                            target.logger.error("Log2Timber: No dependencies found in runtime configuration for variant '${variant.name}'")
-                            target.logger.error("Log2Timber: Log2Timber may occur runtime crash if Timber is not included as a dependency.")
-                        }
-                    }
-                }
-
                 val variantExtension = variant.getExtension(Log2TimberVariantDslExtension::class.java)
                 val projectExtension = (common as ExtensionAware).extensions.getByType(Log2TimberDslExtension::class.java)
                 val enabled = variantExtension?.enabled?.takeIf(Property<Boolean>::isPresent) ?: projectExtension.enabled.convention(true)
                 val forcePlant = variantExtension?.forcePlant?.takeIf(Property<Boolean>::isPresent)
                     ?: projectExtension.forcePlant.convention(true)
                 val dump = variantExtension?.dump?.takeIf(RegularFileProperty::isPresent) ?: projectExtension.dump
-                if (enabled.get()) {
-                    val service = target.gradle.sharedServices.registerIfAbsent(
-                        "log2timber-${variant.name}-dump",
-                        DumpWriterService::class.java,
-                    ) {
-                        it.parameters.dump.set(dump)
-                        it.maxParallelUsages.set(1)
-                    }
 
-                    variant.instrumentation.transformClassesWith(
-                        Log2TimberVisitorFactory::class.java,
-                        InstrumentationScope.ALL,
-                    ) {
-                        it.service.set(service)
-                        it.forcePlant.set(forcePlant)
-                    }
-
-                    // Log to Timber transformation may change the stack map frames.
-                    // Therefore, we need to recompute the frames for the instrumented methods.
-                    variant.instrumentation.setAsmFramesComputationMode(FramesComputationMode.COMPUTE_FRAMES_FOR_INSTRUMENTED_METHODS)
+                val verify = target.tasks.register(
+                    "verify${variant.name.replaceFirstChar(Char::uppercaseChar)}TimberDependency",
+                    VerifyTimberDependencyTask::class.java,
+                ) {
+                    it.variantName.set(variant.name)
+                    it.instrumentationEnabled.set(enabled)
+                    it.timberMissing.set(
+                        variant.runtimeConfiguration.incoming.resolutionResult.rootComponent
+                            .map(ResolvedComponentResult::isTimberMissing),
+                    )
                 }
+                variant.lifecycleTasks.registerPreBuild(verify)
+
+                val service = target.gradle.sharedServices.registerIfAbsent(
+                    "log2timber-${variant.name}-dump",
+                    DumpWriterService::class.java,
+                ) {
+                    it.parameters.dump.set(dump)
+                    it.maxParallelUsages.set(1)
+                }
+
+                // Registration cannot be deferred to execution time, so the transform is always wired
+                // and [Log2TimberVisitorFactory.isInstrumentable] resolves [enabled] lazily instead.
+                variant.instrumentation.transformClassesWith(
+                    Log2TimberVisitorFactory::class.java,
+                    InstrumentationScope.ALL,
+                ) {
+                    it.service.set(service)
+                    it.enabled.set(enabled)
+                    it.forcePlant.set(forcePlant)
+                }
+
+                // Log to Timber transformation may change the stack map frames.
+                // Therefore, we need to recompute the frames for the instrumented methods.
+                variant.instrumentation.setAsmFramesComputationMode(FramesComputationMode.COMPUTE_FRAMES_FOR_INSTRUMENTED_METHODS)
             }
         }
     }
