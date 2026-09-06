@@ -35,6 +35,18 @@ class Log2TimberVisitorFactoryTest {
     fun setup() {
         val project = ProjectBuilder.builder().build()
         factory = project.objects.newInstance(Log2TimberVisitorFactory::class.java)
+        factory.parameters.set(
+            project.objects.newInstance(Log2TimberVisitorFactory.Parameter::class.java).apply {
+                enabled.set(true)
+                forcePlant.set(true)
+            },
+        )
+    }
+
+    @Test
+    fun testIsInstrumentable_givenDisabled_thenFalse() {
+        factory.parameters.get().enabled.set(false)
+        assertThat(factory.isInstrumentable(FakeClassData("com.example.Foo"))).isFalse()
     }
 
     @Test

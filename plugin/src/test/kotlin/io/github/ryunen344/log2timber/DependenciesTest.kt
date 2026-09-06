@@ -25,8 +25,8 @@ import assertk.assertions.isTrue
 import org.gradle.api.artifacts.ModuleIdentifier
 import org.gradle.api.artifacts.component.ComponentIdentifier
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
-import org.gradle.api.artifacts.result.ResolutionResult
 import org.gradle.api.artifacts.result.ResolvedComponentResult
+import org.gradle.api.artifacts.result.ResolvedDependencyResult
 import org.junit.jupiter.api.Test
 import java.lang.reflect.Proxy
 
@@ -66,25 +66,43 @@ class DependenciesTest {
 
     @Test
     fun testIsTimberMissing_givenTimberPresent_thenFalse() {
-        val result = resolutionResult(
+        val root = rootComponent(
             FakeModuleComponentIdentifier("androidx.core", "core"),
             FakeModuleComponentIdentifier(Log2TimberPlugin.TIMBER_GROUP, Log2TimberPlugin.TIMBER_MODULE),
         )
-        assertThat(result.isTimberMissing()).isFalse()
+        assertThat(root.isTimberMissing()).isFalse()
     }
 
     @Test
     fun testIsTimberMissing_givenTimberAbsent_thenTrue() {
-        val result = resolutionResult(
+        val root = rootComponent(
             FakeModuleComponentIdentifier("androidx.core", "core"),
             FakeComponentIdentifier,
         )
-        assertThat(result.isTimberMissing()).isTrue()
+        assertThat(root.isTimberMissing()).isTrue()
     }
 
     @Test
     fun testIsTimberMissing_givenNoComponents_thenTrue() {
-        assertThat(resolutionResult().isTimberMissing()).isTrue()
+        assertThat(rootComponent().isTimberMissing()).isTrue()
+    }
+
+    @Test
+    fun testIsTimberMissing_givenTransitiveTimber_thenFalse() {
+        val timber = fakeComponent(
+            FakeModuleComponentIdentifier(Log2TimberPlugin.TIMBER_GROUP, Log2TimberPlugin.TIMBER_MODULE),
+        )
+        val logging = fakeComponent(FakeModuleComponentIdentifier("com.example", "logging"), mutableListOf(timber))
+        val root = fakeComponent(FakeComponentIdentifier, mutableListOf(logging))
+        assertThat(root.isTimberMissing()).isFalse()
+    }
+
+    @Test
+    fun testIsTimberMissing_givenCyclicGraph_thenTerminates() {
+        val aDependencies = mutableListOf<ResolvedComponentResult>()
+        val a = fakeComponent(FakeModuleComponentIdentifier("com.example", "a"), aDependencies)
+        aDependencies += fakeComponent(FakeModuleComponentIdentifier("com.example", "b"), mutableListOf(a))
+        assertThat(a.isTimberMissing()).isTrue()
     }
 
     private class FakeModuleComponentIdentifier(
@@ -102,25 +120,39 @@ class DependenciesTest {
         override fun getDisplayName(): String = "fake"
     }
 
-    private companion object {
-        fun resolutionResult(vararg ids: ComponentIdentifier): ResolutionResult {
-            val components = ids.mapTo(LinkedHashSet(), ::fakeComponent)
-            return ResolutionResult::class.java.proxy { method, _ ->
-                when (method.name) {
-                    "getAllComponents" -> components
-                    "toString" -> "FakeResolutionResult"
-                    else -> throw UnsupportedOperationException(method.name)
-                }
-            }
-        }
+    private object FakeRootComponentIdentifier : ComponentIdentifier {
+        override fun getDisplayName(): String = "root"
+    }
 
-        fun fakeComponent(id: ComponentIdentifier): ResolvedComponentResult =
+    private companion object {
+        /**
+         * Builds a root component whose direct dependencies are the given ids.
+         */
+        fun rootComponent(vararg ids: ComponentIdentifier): ResolvedComponentResult =
+            fakeComponent(FakeRootComponentIdentifier, ids.mapTo(mutableListOf(), ::fakeComponent))
+
+        fun fakeComponent(
+            id: ComponentIdentifier,
+            dependencies: MutableList<ResolvedComponentResult> = mutableListOf(),
+        ): ResolvedComponentResult =
             ResolvedComponentResult::class.java.proxy { method, args ->
                 when (method.name) {
                     "getId" -> id
+                    "getDependencies" -> dependencies.mapTo(LinkedHashSet(), ::fakeDependency)
                     "hashCode" -> System.identityHashCode(id)
                     "equals" -> id === (args?.getOrNull(0) as? ResolvedComponentResult)?.id
                     "toString" -> "FakeResolvedComponentResult($id)"
+                    else -> throw UnsupportedOperationException(method.name)
+                }
+            }
+
+        fun fakeDependency(selected: ResolvedComponentResult): ResolvedDependencyResult =
+            ResolvedDependencyResult::class.java.proxy { method, args ->
+                when (method.name) {
+                    "getSelected" -> selected
+                    "hashCode" -> System.identityHashCode(selected)
+                    "equals" -> selected === (args?.getOrNull(0) as? ResolvedDependencyResult)?.selected
+                    "toString" -> "FakeResolvedDependencyResult($selected)"
                     else -> throw UnsupportedOperationException(method.name)
                 }
             }

@@ -21,10 +21,22 @@ package io.github.ryunen344.log2timber
 
 import org.gradle.api.artifacts.component.ComponentIdentifier
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
-import org.gradle.api.artifacts.result.ResolutionResult
+import org.gradle.api.artifacts.result.ResolvedComponentResult
+import org.gradle.api.artifacts.result.ResolvedDependencyResult
 
-internal fun ResolutionResult.isTimberMissing(): Boolean =
-    allComponents.none { it.id.isTimber() }
+internal fun ResolvedComponentResult.isTimberMissing(): Boolean {
+    val visited = mutableSetOf<ComponentIdentifier>()
+    val pending = ArrayDeque(listOf(this))
+    while (pending.isNotEmpty()) {
+        val component = pending.removeFirst()
+        if (!visited.add(component.id)) continue
+        if (component.id.isTimber()) return false
+        component.dependencies
+            .filterIsInstance<ResolvedDependencyResult>()
+            .mapTo(pending, ResolvedDependencyResult::getSelected)
+    }
+    return true
+}
 
 internal fun ComponentIdentifier.isTimber(): Boolean =
     this is ModuleComponentIdentifier &&
