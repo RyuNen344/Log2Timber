@@ -42,14 +42,27 @@ line of source code.
 - `com.android.application` module (library modules are skipped with a warning)
 - `com.jakewharton.timber:timber` on the runtime classpath
 
-The plugin registers a `verify<Variant>TimberDependency` pre-build task that warns when Timber is
-missing from the variant runtime classpath.
+For each instrumented variant the plugin registers a `verify<Variant>TimberDependency` pre-build task
+that logs an error when Timber is missing from the variant runtime classpath.
 
 ## Installation
+
+The plugin is published to Maven Central, so add `mavenCentral()` to the plugin repositories first.
 
 ### Gradle Kotlin DSL
 
 ```kotlin
+// settings.gradle.kts
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+```
+
+```kotlin
+// build.gradle.kts
 plugins {
     id("com.android.application")
     id("io.github.ryunen344.log2timber") version "$version"
@@ -59,6 +72,17 @@ plugins {
 ### Gradle Groovy DSL
 
 ```gradle
+// settings.gradle
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+```
+
+```gradle
+// build.gradle
 plugins {
     id 'com.android.application'
     id 'io.github.ryunen344.log2timber' version '$version'
@@ -140,9 +164,11 @@ class io/github/ryunen344/log2timber/app/ExampleActivity {
 }
 ```
 
-> [!TIP]
-> `dump` is written per variant, so pointing each build type at its own file makes it easy to diff
-> what changed between them.
+> [!IMPORTANT]
+> `dump` is written per variant, so give each build type and product flavor its own file.
+> Variants pointing at the same file overwrite each other's output.
+> Configuring it at the project level makes every variant share one file, which is why the example
+> above sets it on a product flavor.
 
 > [!NOTE]
 > The dump only contains what the current build actually instrumented.
@@ -151,6 +177,7 @@ class io/github/ryunen344/log2timber/app/ExampleActivity {
 > Run a clean build when you need the full list.
 
 ## License
+
 ```text
 Copyright (C) 2026 RyuNen344
 

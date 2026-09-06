@@ -25,7 +25,7 @@ import org.objectweb.asm.Opcodes
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-public class Log2TimberMethodVisitor(
+internal class Log2TimberMethodVisitor(
     api: Int,
     methodVisitor: MethodVisitor,
     private val forcePlant: Boolean,

@@ -24,7 +24,7 @@ import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.util.Textifier
 import java.io.PrintWriter
 
-public class Log2TimberClassVisitor(
+internal class Log2TimberClassVisitor(
     api: Int,
     cv: ClassVisitor,
     private val forcePlant: Boolean,

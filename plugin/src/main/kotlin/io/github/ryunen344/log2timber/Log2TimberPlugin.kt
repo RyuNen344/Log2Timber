@@ -32,15 +32,11 @@ import org.gradle.api.artifacts.result.ResolvedComponentResult
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.provider.Property
-import org.gradle.kotlin.dsl.findPlugin
 import org.gradle.kotlin.dsl.getByType
 
 public class Log2TimberPlugin : Plugin<Project> {
     override fun apply(target: Project) {
-        val plugin = target.plugins.findPlugin(AppPlugin::class)
-        if (plugin == null) {
-            target.logger.warn("Log2Timber: Android Application Plugin not found. Skipping plugin application.")
-        } else {
+        target.plugins.withType(AppPlugin::class.java) { _ ->
             target.logger.info("Log2Timber: Android Application Plugin found. Applying Log2TimberPlugin.")
             val androidComponents = target.extensions.getByType(ApplicationAndroidComponentsExtension::class)
             androidComponents.registerExtension(
@@ -57,51 +53,52 @@ public class Log2TimberPlugin : Plugin<Project> {
                 val variantExtension = variant.getExtension(Log2TimberVariantDslExtension::class.java)
                 val projectExtension = (common as ExtensionAware).extensions.getByType(Log2TimberDslExtension::class.java)
                 val enabled = variantExtension?.enabled?.takeIf(Property<Boolean>::isPresent) ?: projectExtension.enabled.convention(true)
-                val forcePlant = variantExtension?.forcePlant?.takeIf(Property<Boolean>::isPresent)
-                    ?: projectExtension.forcePlant.convention(true)
-                val dump = variantExtension?.dump?.takeIf(RegularFileProperty::isPresent) ?: projectExtension.dump
 
-                val verify = target.tasks.register(
-                    "verify${variant.name.replaceFirstChar(Char::uppercaseChar)}TimberDependency",
-                    VerifyTimberDependencyTask::class.java,
-                ) {
-                    it.variantName.set(variant.name)
-                    it.instrumentationEnabled.set(enabled)
-                    it.timberMissing.set(
-                        enabled.flatMap { isEnabled ->
-                            if (!isEnabled) {
-                                target.providers.provider { false }
-                            } else {
-                                variant.runtimeConfiguration.incoming.resolutionResult.rootComponent
-                                    .map(ResolvedComponentResult::isTimberMissing)
-                            }
-                        },
-                    )
+                // AGP offers no lazy counterpart for transformClassesWith
+                if (enabled.get()) {
+                    val forcePlant = variantExtension?.forcePlant?.takeIf(Property<Boolean>::isPresent)
+                        ?: projectExtension.forcePlant.convention(true)
+                    val dump = variantExtension?.dump?.takeIf(RegularFileProperty::isPresent) ?: projectExtension.dump
+
+                    val verify = target.tasks.register(
+                        "verify${variant.name.replaceFirstChar(Char::uppercaseChar)}TimberDependency",
+                        VerifyTimberDependencyTask::class.java,
+                    ) {
+                        it.variantName.set(variant.name)
+                        it.timberMissing.set(
+                            variant.runtimeConfiguration.incoming.resolutionResult.rootComponent
+                                .map(ResolvedComponentResult::isTimberMissing),
+                        )
+                    }
+                    variant.lifecycleTasks.registerPreBuild(verify)
+
+                    val service = target.gradle.sharedServices.registerIfAbsent(
+                        "log2timber-${target.path}-${variant.name}-dump",
+                        DumpWriterService::class.java,
+                    ) {
+                        it.parameters.dump.set(dump)
+                        it.maxParallelUsages.set(1)
+                    }
+
+                    variant.instrumentation.transformClassesWith(
+                        Log2TimberVisitorFactory::class.java,
+                        InstrumentationScope.ALL,
+                    ) {
+                        it.service.set(service)
+                        it.forcePlant.set(forcePlant)
+                    }
+
+                    // Log to Timber transformation may change the stack map frames.
+                    // Therefore, we need to recompute the frames for the instrumented methods.
+                    variant.instrumentation.setAsmFramesComputationMode(FramesComputationMode.COMPUTE_FRAMES_FOR_INSTRUMENTED_METHODS)
+                } else {
+                    target.logger.info("Log2Timber: instrumentation is disabled for variant '${variant.name}'. Skipping.")
                 }
-                variant.lifecycleTasks.registerPreBuild(verify)
-
-                val service = target.gradle.sharedServices.registerIfAbsent(
-                    "log2timber-${variant.name}-dump",
-                    DumpWriterService::class.java,
-                ) {
-                    it.parameters.dump.set(dump)
-                    it.maxParallelUsages.set(1)
-                }
-
-                // Registration cannot be deferred to execution time, so the transform is always wired
-                // and [Log2TimberVisitorFactory.isInstrumentable] resolves [enabled] lazily instead.
-                variant.instrumentation.transformClassesWith(
-                    Log2TimberVisitorFactory::class.java,
-                    InstrumentationScope.ALL,
-                ) {
-                    it.service.set(service)
-                    it.enabled.set(enabled)
-                    it.forcePlant.set(forcePlant)
-                }
-
-                // Log to Timber transformation may change the stack map frames.
-                // Therefore, we need to recompute the frames for the instrumented methods.
-                variant.instrumentation.setAsmFramesComputationMode(FramesComputationMode.COMPUTE_FRAMES_FOR_INSTRUMENTED_METHODS)
+            }
+        }
+        target.afterEvaluate {
+            if (!it.plugins.hasPlugin(AppPlugin::class.java)) {
+                it.logger.warn("Log2Timber: Android Application Plugin not found. Skipping plugin application.")
             }
         }
     }
