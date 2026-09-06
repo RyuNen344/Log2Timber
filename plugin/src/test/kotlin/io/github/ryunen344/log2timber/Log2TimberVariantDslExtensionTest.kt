@@ -49,7 +49,7 @@ class Log2TimberVariantDslExtensionTest {
     fun setup() {
         project = ProjectBuilder.builder().build()
         project.plugins.apply("com.android.application")
-        project.plugins.apply("log2timber")
+        project.plugins.apply("io.github.ryunen344.log2timber")
 
         android = project.extensions.getByType(ApplicationExtension::class.java)
         android.compileSdk = 33
