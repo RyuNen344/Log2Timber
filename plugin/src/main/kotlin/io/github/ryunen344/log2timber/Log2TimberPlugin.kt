@@ -68,8 +68,14 @@ public class Log2TimberPlugin : Plugin<Project> {
                     it.variantName.set(variant.name)
                     it.instrumentationEnabled.set(enabled)
                     it.timberMissing.set(
-                        variant.runtimeConfiguration.incoming.resolutionResult.rootComponent
-                            .map(ResolvedComponentResult::isTimberMissing),
+                        enabled.flatMap { isEnabled ->
+                            if (!isEnabled) {
+                                target.providers.provider { false }
+                            } else {
+                                variant.runtimeConfiguration.incoming.resolutionResult.rootComponent
+                                    .map(ResolvedComponentResult::isTimberMissing)
+                            }
+                        },
                     )
                 }
                 variant.lifecycleTasks.registerPreBuild(verify)

@@ -45,6 +45,6 @@ public abstract class VerifyTimberDependencyTask : DefaultTask() {
     public fun verify() {
         if (!instrumentationEnabled.get() || !timberMissing.get()) return
         logger.error("Log2Timber: No Timber dependency found in runtime configuration for variant '${variantName.get()}'")
-        logger.error("Log2Timber: Log2Timber may occur runtime crash if Timber is not included as a dependency.")
+        logger.error("Log2Timber: Log2Timber may cause a runtime crash if Timber is not included as a dependency.")
     }
 }
