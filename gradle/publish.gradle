@@ -19,7 +19,7 @@ abstract class LocalDotPropertiesValueSource implements ValueSource<Properties, 
 
 def propertiesProvider = providers.of(LocalDotPropertiesValueSource.class) {
     parameters {
-        file = project.layout.settingsDirectory.file(".local.properties")
+        file = project.layout.settingsDirectory.file("local.properties")
     }
 }
 
