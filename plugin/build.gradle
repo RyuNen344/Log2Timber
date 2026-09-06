@@ -29,9 +29,14 @@ test {
 }
 
 gradlePlugin {
+    website = "https://github.com/RyuNen344/Log2Timber"
+    vcsUrl = "https://github.com/RyuNen344/Log2Timber"
     plugins {
-        register("log2timber") {
-            id = "log2timber"
+        log2timber {
+            id = "io.github.ryunen344.log2timber"
+            displayName = "Log2Timber"
+            description = "Replanting Logcat with Timber"
+            tags.set(["Timber", "Android", "Logcat"])
             implementationClass = "io.github.ryunen344.log2timber.Log2TimberPlugin"
         }
     }
