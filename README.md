@@ -43,7 +43,7 @@ line of source code.
 - `com.jakewharton.timber:timber` on the runtime classpath
 
 For each instrumented variant the plugin registers a `verify<Variant>TimberDependency` pre-build task
-that warns when Timber is missing from the variant runtime classpath.
+that logs an error when Timber is missing from the variant runtime classpath.
 
 ## Installation
 
