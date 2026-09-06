@@ -45,7 +45,6 @@ public abstract class Log2TimberVisitorFactory : AsmClassVisitorFactory<Log2Timb
     }
 
     override fun isInstrumentable(classData: ClassData): Boolean {
-        if (!parameters.get().enabled.get()) return false
         return (listOf(classData.className) + classData.superClasses)
             .none { it in TIMBER_CLASS || it in ASM_INCOMPATIBLE_CLASSES }
     }
@@ -53,9 +52,6 @@ public abstract class Log2TimberVisitorFactory : AsmClassVisitorFactory<Log2Timb
     public interface Parameter : InstrumentationParameters {
         @get:ServiceReference
         public val service: Property<DumpWriterService>
-
-        @get:Input
-        public val enabled: Property<Boolean>
 
         @get:Input
         public val forcePlant: Property<Boolean>

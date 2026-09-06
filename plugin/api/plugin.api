@@ -38,7 +38,6 @@ public abstract class io/github/ryunen344/log2timber/Log2TimberVariantDslExtensi
 
 public abstract class io/github/ryunen344/log2timber/VerifyTimberDependencyTask : org/gradle/api/DefaultTask {
 	public fun <init> ()V
-	public abstract fun getInstrumentationEnabled ()Lorg/gradle/api/provider/Property;
 	public abstract fun getTimberMissing ()Lorg/gradle/api/provider/Property;
 	public abstract fun getVariantName ()Lorg/gradle/api/provider/Property;
 	public final fun verify ()V
@@ -49,19 +48,6 @@ public final class io/github/ryunen344/log2timber/dsl/ExtensionKt {
 	public static final fun log2timber (Lcom/android/build/api/dsl/ApplicationProductFlavor;Lorg/gradle/api/Action;)V
 }
 
-public final class io/github/ryunen344/log2timber/visitor/Log2TimberClassVisitor : org/objectweb/asm/ClassVisitor {
-	public fun <init> (ILorg/objectweb/asm/ClassVisitor;ZLjava/io/PrintWriter;)V
-	public fun visit (IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)V
-	public fun visitEnd ()V
-	public fun visitMethod (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Lorg/objectweb/asm/MethodVisitor;
-}
-
-public final class io/github/ryunen344/log2timber/visitor/Log2TimberMethodVisitor : org/objectweb/asm/MethodVisitor {
-	public fun <init> (ILorg/objectweb/asm/MethodVisitor;ZLkotlin/jvm/functions/Function5;Lkotlin/jvm/functions/Function0;)V
-	public fun visitEnd ()V
-	public fun visitMethodInsn (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V
-}
-
 public abstract class io/github/ryunen344/log2timber/visitor/Log2TimberVisitorFactory : com/android/build/api/instrumentation/AsmClassVisitorFactory {
 	public fun <init> ()V
 	public fun createClassVisitor (Lcom/android/build/api/instrumentation/ClassContext;Lorg/objectweb/asm/ClassVisitor;)Lorg/objectweb/asm/ClassVisitor;
@@ -69,7 +55,6 @@ public abstract class io/github/ryunen344/log2timber/visitor/Log2TimberVisitorFa
 }
 
 public abstract interface class io/github/ryunen344/log2timber/visitor/Log2TimberVisitorFactory$Parameter : com/android/build/api/instrumentation/InstrumentationParameters {
-	public abstract fun getEnabled ()Lorg/gradle/api/provider/Property;
 	public abstract fun getForcePlant ()Lorg/gradle/api/provider/Property;
 	public abstract fun getService ()Lorg/gradle/api/provider/Property;
 }

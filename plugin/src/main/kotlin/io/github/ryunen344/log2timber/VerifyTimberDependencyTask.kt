@@ -36,14 +36,11 @@ public abstract class VerifyTimberDependencyTask : DefaultTask() {
     public abstract val variantName: Property<String>
 
     @get:Input
-    public abstract val instrumentationEnabled: Property<Boolean>
-
-    @get:Input
     public abstract val timberMissing: Property<Boolean>
 
     @TaskAction
     public fun verify() {
-        if (!instrumentationEnabled.get() || !timberMissing.get()) return
+        if (!timberMissing.get()) return
         logger.error("Log2Timber: No Timber dependency found in runtime configuration for variant '${variantName.get()}'")
         logger.error("Log2Timber: Log2Timber may cause a runtime crash if Timber is not included as a dependency.")
     }
